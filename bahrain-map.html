@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bahrain — Full Map</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin="anonymous">
+
+  <style>
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Screen layout ── */
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #e8e8e8;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    .page-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 32px;
+      min-height: 100vh;
+    }
+
+    /* ── Map card (screen: 3:6 ratio, capped at viewport) ── */
+    .map-card {
+      position: relative;
+      width:  min(50vw, 420px);
+      /* keep 1:2 (3 m : 6 m) ratio */
+      aspect-ratio: 1 / 2;
+      background: #d4d4d4;
+      border: 2px solid #aaa;
+      box-shadow: 0 4px 24px rgba(0,0,0,.25);
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── Compass rose ── */
+    .compass {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 1000;
+      width: 44px;
+      height: 44px;
+      pointer-events: none;
+    }
+
+    /* ── Scale bar override: dark on grey ── */
+    .leaflet-control-scale-line {
+      background: rgba(255,255,255,.85);
+      border-color: #555;
+      color: #222;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* ── Attribution strip ── */
+    .leaflet-control-attribution {
+      font-size: 9px;
+      background: rgba(255,255,255,.7);
+    }
+
+    /* ── Title block (shown on screen, hidden on print) ── */
+    .map-title {
+      margin-bottom: 14px;
+      text-align: center;
+      color: #333;
+    }
+    .map-title h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .map-title p {
+      font-size: .8rem;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    /* ─────────────────────────────────────────────────────
+       PRINT  —  physical 3 m × 6 m page at 96 dpi
+       3 m = 11 338 px   |   6 m = 22 677 px
+       Using CSS mm units: 3 m = 3000 mm, 6 m = 6000 mm
+       ───────────────────────────────────────────────────── */
+    @page {
+      size: 3000mm 6000mm;
+      margin: 20mm;
+    }
+
+    @media print {
+      html, body {
+        width:  3000mm;
+        height: 6000mm;
+        background: #fff;
+        padding: 0;
+      }
+
+      .page-wrapper {
+        width:  3000mm;
+        height: 6000mm;
+        padding: 20mm;
+        display: block;
+      }
+
+      .map-title {
+        margin-bottom: 12mm;
+      }
+      .map-title h1 { font-size: 80pt; }
+      .map-title p  { font-size: 30pt; }
+
+      .map-card {
+        width:  2960mm;          /* 3000 mm page − 2×20 mm margin */
+        height: 5840mm;          /* 6000 mm page − title + margins  */
+        aspect-ratio: unset;
+        border: 3mm solid #888;
+        box-shadow: none;
+      }
+
+      #map { width: 100%; height: 100%; }
+
+      .compass { width: 120mm; height: 120mm; top: 30mm; right: 30mm; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <div class="map-title">
+    <h1>Kingdom of Bahrain</h1>
+    <p>OpenStreetMap &nbsp;·&nbsp; Grey Road Map &nbsp;·&nbsp; 3 m × 6 m</p>
+  </div>
+
+  <div class="map-card">
+
+    <!-- Compass SVG -->
+    <svg class="compass" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="48" fill="rgba(255,255,255,.75)" stroke="#666" stroke-width="2"/>
+      <!-- North pointer (red) -->
+      <polygon points="50,6 44,50 56,50" fill="#c0392b"/>
+      <!-- South pointer (grey) -->
+      <polygon points="50,94 44,50 56,50" fill="#888"/>
+      <!-- N label -->
+      <text x="50" y="20" text-anchor="middle" font-size="16" font-weight="bold"
+            fill="#c0392b" font-family="Arial">N</text>
+    </svg>
+
+    <div id="map"></div>
+  </div>
+
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV/XN/WPeM="
+        crossorigin="anonymous"></script>
+
+<script>
+  /* ── Bahrain bounding box ──
+     SW: 25.535°N, 50.300°E   NE: 26.387°N, 50.850°E          */
+  const BAHRAIN_BOUNDS = L.latLngBounds(
+    [25.535, 50.300],
+    [26.387, 50.850]
+  );
+
+  const map = L.map('map', {
+    maxBounds:        BAHRAIN_BOUNDS.pad(0.15),
+    maxBoundsViscosity: 1.0,
+    zoomControl:      true,
+    attributionControl: true,
+    scrollWheelZoom:  true,
+  });
+
+  /* Fit the map to Bahrain on load */
+  map.fitBounds(BAHRAIN_BOUNDS);
+
+  /* ── Grey tile layer — CartoDB Positron (free, no key needed) ── */
+  L.tileLayer(
+    'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+    {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors ' +
+        '&copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 20,
+      minZoom: 8,
+    }
+  ).addTo(map);
+
+  /* ── Road-highlight overlay — Stadia Toner Lines (roads only, dark) ──
+     Blend on top of grey base for crisp road visibility.             */
+  L.tileLayer(
+    'https://tiles.stadiamaps.com/tiles/stamen_toner_lines/{z}/{x}/{y}{r}.png',
+    {
+      attribution:
+        '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> ' +
+        '&copy; <a href="https://stamen.com">Stamen Design</a>',
+      subdomains: 'abcd',
+      maxZoom: 20,
+      minZoom: 8,
+      opacity: 0.35,
+    }
+  ).addTo(map);
+
+  /* ── Scale bar ── */
+  L.control.scale({ imperial: false, maxWidth: 200 }).addTo(map);
+
+  /* ── Force re-render on any resize (handles print layout shift) ── */
+  window.addEventListener('resize', () => {
+    map.invalidateSize();
+    map.fitBounds(BAHRAIN_BOUNDS);
+  });
+
+  /* ── Before print: fit Bahrain into the newly sized container ── */
+  window.addEventListener('beforeprint', () => {
+    setTimeout(() => {
+      map.invalidateSize();
+      map.fitBounds(BAHRAIN_BOUNDS);
+    }, 200);
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Uber Black Period Report — 21 Sep to 1 Oct 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html { overflow-x: hidden; }
+  body {
+    font-family: "Poppins", Arial, sans-serif;
+    background: #faf9f5;
+    color: #141413;
+    padding: 48px;
+    max-width: 1280px;
+    margin: 0 auto;
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+  h1 { font-family: "Poppins", Arial, sans-serif; font-weight: 600; font-size: 30px; margin-bottom: 4px; }
+  h2 { font-family: "Poppins", Arial, sans-serif; font-weight: 600; font-size: 21px; margin-top: 48px; margin-bottom: 14px; }
+  p.subtitle { font-size: 13.5px; color: #8a8a82; margin-top: 0; margin-bottom: 30px; }
+  p.note { font-size: 12.5px; color: #888; margin-top: -6px; margin-bottom: 18px; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 16px; margin-bottom: 8px; }
+  .kpi-card { background: #fff; border-radius: 14px; padding: 18px 20px; border: 1px solid #f0efe6; box-shadow: 0 2px 10px rgba(20,20,19,0.05); }
+  .kpi-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; color: #8a8a82; font-weight: 800; margin-bottom: 8px; }
+  .kpi-value { font-family: "Poppins", Arial, sans-serif; font-weight: 800; font-size: 26px; }
+  .kpi-value.green { color: #007a4d; }
+  .kpi-value.red { color: #b40e0e; }
+  .cols { display: flex; gap: 20px; flex-wrap: wrap; }
+  .cols > div { flex: 1; min-width: 300px; }
+  .chart-card { background: #fff; border-radius: 14px; box-shadow: 0 2px 10px rgba(20,20,19,0.06); border: 1px solid #f0efe6; padding: 24px 26px 16px; }
+  .chart-title { font-size: 11px; color: #8a8a82; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 20px; font-weight: 600; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .chart-title .peak { color: #141413; font-weight: 600; text-transform: none; letter-spacing: 0; font-size: 13.5px; font-family: "Poppins", Arial, sans-serif; }
+  .chart-bars { display: flex; align-items: flex-end; gap: 4px; height: 150px; padding-bottom: 10px; position: relative; background-image: repeating-linear-gradient(to top, #eeece1 0, #eeece1 1px, transparent 1px, transparent 25%); background-size: 100% 100%; }
+  .chart-bar-wrap { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; position: relative; }
+  .chart-bar { width: 100%; max-width: 20px; border-radius: 5px 5px 2px 2px; min-height: 3px; position: relative; box-shadow: inset 0 -6px 8px -4px rgba(0,0,0,0.12); }
+  .chart-bar.completed-bar { background: linear-gradient(180deg, #17b378 0%, #007a4d 100%); }
+  .chart-bar.cancelled-bar { background: linear-gradient(180deg, #ef5a5a 0%, #b40e0e 100%); }
+  .chart-bar.peak { box-shadow: 0 0 0 2px #faf9f5, 0 0 0 3.5px #141413, inset 0 -6px 8px -4px rgba(0,0,0,0.15); }
+  .chart-bar-count { font-size: 10px; font-weight: 600; color: #141413; margin-bottom: 5px; font-variant-numeric: tabular-nums; }
+  .chart-bar-count.peak-count-completed { color: #007a4d; }
+  .chart-bar-count.peak-count-cancelled { color: #b40e0e; }
+  .chart-labels { display: flex; gap: 4px; margin-top: 8px; }
+  .chart-label { flex: 1; min-width: 0; text-align: center; font-size: 9.5px; font-weight: 600; color: #9a988c; white-space: nowrap; overflow: visible; letter-spacing: 0.01em; }
+  table { border-collapse: collapse; width: 100%; background: #fff; border-radius: 12px; overflow: hidden; font-size: 13px; }
+  .table-wrap { background: #fff; border-radius: 14px; border: 1px solid #f0efe6; box-shadow: 0 2px 10px rgba(20,20,19,0.05); overflow-x: auto; }
+  .table-wrap table { min-width: 480px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid #f0efe6; }
+  th { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em; color: #8a8a82; font-weight: 600; background: #fbfaf6; }
+  tr:last-child td { border-bottom: none; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .day-badge { display: inline-block; background: #f3f1e8; color: #6b6a5f; font-size: 10.5px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; }
+
+  .alert-card { background: #fff7f0; border: 1px solid #f3d9b8; border-radius: 14px; padding: 20px 22px; margin-bottom: 20px; }
+  .alert-title { font-weight: 600; font-size: 14px; color: #a35a1a; margin-bottom: 8px; }
+  .alert-text { font-size: 13.5px; color: #4a3a2a; }
+  .incident-table { font-size: 12.5px; }
+  .incident-table th, .incident-table td { padding: 9px 10px; }
+  .same-addr { color: #b45309; font-weight: 600; }
+  .badge { display: inline-block; font-size: 10.5px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+  .badge-cancel { background: #fbe9e9; color: #b40e0e; }
+  .table-wrap table.incident-table { min-width: 620px; }
+
+  @page { size: A4; margin: 12mm; }
+  @media print {
+    body { zoom: 0.75; }
+    .table-wrap table { min-width: 0 !important; }
+    .cols th, .cols td { padding: 6px 8px !important; font-size: 11px !important; }
+  }
+
+  @media (max-width: 720px) {
+    body { padding: 24px 16px; }
+    h1 { font-size: 21px; }
+    h2 { font-size: 16px; margin-top: 34px; margin-bottom: 10px; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .kpi-card { padding: 14px 14px; }
+    .kpi-value { font-size: 20px; }
+    .cols { gap: 14px; overflow-x: hidden; }
+    .cols > div { min-width: 0 !important; }
+    .chart-card { padding: 16px 14px 10px; max-width: 100%; overflow-x: hidden; }
+    .chart-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; max-width: 100%; }
+    .chart-bars, .chart-labels { min-width: 620px; height: 110px; }
+    .chart-labels { height: auto; }
+    .chart-bar-count { font-size: 8px; }
+    .chart-label { font-size: 8px; }
+  }
+
+  .num.green{color:#007a4d;font-weight:600} .num.red{color:#b40e0e;font-weight:600}
+  tr.tot-row td{font-weight:700;background:#fbfaf6}
+  .legend{display:flex;gap:18px;font-size:12px;color:#6b6a5f;margin-bottom:14px;flex-wrap:wrap}
+  .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+  .dchart{display:flex;gap:8px;align-items:flex-end;height:300px;padding-top:24px;background-image:repeating-linear-gradient(to top,#eeece1 0,#eeece1 1px,transparent 1px,transparent 25%)}
+  .day{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end}
+  .stack{width:100%;max-width:56px;display:flex;flex-direction:column;justify-content:flex-end;height:calc(100% - 72px);position:relative}
+  .tot{text-align:center;font-weight:700;font-size:12px;margin-bottom:4px;position:absolute;bottom:100%;width:100%;display:none}
+  .seg{width:100%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:600;min-height:0}
+  .seg.comp{background:linear-gradient(180deg,#17b378,#007a4d);border-radius:0 0 3px 3px}
+  .seg.can{background:linear-gradient(180deg,#ef5a5a,#b40e0e);border-radius:5px 5px 0 0}
+  .dl{font-size:11px;font-weight:600;margin-top:8px}.dl2{font-size:10px;color:#9a988c}.rate{font-size:11px;font-weight:700;color:#b40e0e;margin-top:4px}
+  .insight{font-size:13.5px;color:#4a4a42;margin:0 0 6px}
+  @media (max-width:720px){.dchart{min-width:560px}.chart-scroll2{overflow-x:auto}}
+</style>
+</head>
+<body>
+  <h1>Uber Black Period Report</h1>
+  <p class="subtitle">Enterprises Rent-a-Car, Bahrain &nbsp;•&nbsp; 21 September 4:00 AM &ndash; 1 October 4:00 AM 2026 (10 operating days)</p>
+  <div class="kpi-grid">
+    <div class="kpi-card"><div class="kpi-label">Total Trips</div><div class="kpi-value">2295</div></div>
+    <div class="kpi-card"><div class="kpi-label">Completed</div><div class="kpi-value green">1884 (82.1%)</div></div>
+    <div class="kpi-card"><div class="kpi-label">Cancelled</div><div class="kpi-value red">411 (17.9%)</div></div>
+    <div class="kpi-card"><div class="kpi-label">Rider Cancelled</div><div class="kpi-value red">391</div></div>
+    <div class="kpi-card"><div class="kpi-label">Driver Cancelled</div><div class="kpi-value red">20</div></div>
+    <div class="kpi-card"><div class="kpi-label">Avg Trips / Day</div><div class="kpi-value">230</div></div>
+  </div>
+
+  <h2>Daily Trips: Completed vs Cancelled</h2>
+  <p class="note">Operating day runs 4:00 AM to 4:00 AM. Red % under each bar is that day's cancellation rate.</p>
+  <div class="chart-card">
+    <div class="legend"><span><i style="background:#007a4d"></i>Completed</span><span><i style="background:#b40e0e"></i>Cancelled</span></div>
+    <div class="chart-scroll2"><div class="dchart"><div class="day"><div class="stack" title="Mon 21 Sep: 137 trips, 119 completed, 18 cancelled (13.1%)"><div class="tot">137</div><div class="seg can" style="height:4.40%"><span>18</span></div><div class="seg comp" style="height:29.10%"><span>119</span></div></div><div class="dl">21 Sep</div><div class="dl2">Mon</div><div class="rate">13.1%</div></div><div class="day"><div class="stack" title="Tue 22 Sep: 190 trips, 152 completed, 38 cancelled (20.0%)"><div class="tot">190</div><div class="seg can" style="height:9.29%"><span>38</span></div><div class="seg comp" style="height:37.16%"><span>152</span></div></div><div class="dl">22 Sep</div><div class="dl2">Tue</div><div class="rate">20.0%</div></div><div class="day"><div class="stack" title="Wed 23 Sep: 268 trips, 225 completed, 43 cancelled (16.0%)"><div class="tot">268</div><div class="seg can" style="height:10.51%"><span>43</span></div><div class="seg comp" style="height:55.01%"><span>225</span></div></div><div class="dl">23 Sep</div><div class="dl2">Wed</div><div class="rate">16.0%</div></div><div class="day"><div class="stack" title="Thu 24 Sep: 384 trips, 297 completed, 87 cancelled (22.7%)"><div class="tot">384</div><div class="seg can" style="height:21.27%"><span>87</span></div><div class="seg comp" style="height:72.62%"><span>297</span></div></div><div class="dl">24 Sep</div><div class="dl2">Thu</div><div class="rate">22.7%</div></div><div class="day"><div class="stack" title="Fri 25 Sep: 409 trips, 330 completed, 79 cancelled (19.3%)"><div class="tot">409</div><div class="seg can" style="height:19.32%"><span>79</span></div><div class="seg comp" style="height:80.68%"><span>330</span></div></div><div class="dl">25 Sep</div><div class="dl2">Fri</div><div class="rate">19.3%</div></div><div class="day"><div class="stack" title="Sat 26 Sep: 230 trips, 191 completed, 39 cancelled (17.0%)"><div class="tot">230</div><div class="seg can" style="height:9.54%"><span>39</span></div><div class="seg comp" style="height:46.70%"><span>191</span></div></div><div class="dl">26 Sep</div><div class="dl2">Sat</div><div class="rate">17.0%</div></div><div class="day"><div class="stack" title="Sun 27 Sep: 156 trips, 139 completed, 17 cancelled (10.9%)"><div class="tot">156</div><div class="seg can" style="height:4.16%"><span>17</span></div><div class="seg comp" style="height:33.99%"><span>139</span></div></div><div class="dl">27 Sep</div><div class="dl2">Sun</div><div class="rate">10.9%</div></div><div class="day"><div class="stack" title="Mon 28 Sep: 195 trips, 160 completed, 35 cancelled (17.9%)"><div class="tot">195</div><div class="seg can" style="height:8.56%"><span>35</span></div><div class="seg comp" style="height:39.12%"><span>160</span></div></div><div class="dl">28 Sep</div><div class="dl2">Mon</div><div class="rate">17.9%</div></div><div class="day"><div class="stack" title="Tue 29 Sep: 145 trips, 123 completed, 22 cancelled (15.2%)"><div class="tot">145</div><div class="seg can" style="height:5.38%"><span>22</span></div><div class="seg comp" style="height:30.07%"><span>123</span></div></div><div class="dl">29 Sep</div><div class="dl2">Tue</div><div class="rate">15.2%</div></div><div class="day"><div class="stack" title="Wed 30 Sep: 181 trips, 148 completed, 33 cancelled (18.2%)"><div class="tot">181</div><div class="seg can" style="height:8.07%"><span>33</span></div><div class="seg comp" style="height:36.19%"><span>148</span></div></div><div class="dl">30 Sep</div><div class="dl2">Wed</div><div class="rate">18.2%</div></div></div></div>
+  </div>
+  <p class="insight" style="margin-top:14px">Busiest day: <b>Fri 25 Sep</b> (409 trips). Most completions: <b>Fri 25 Sep</b> (330). Highest cancellation rate: <b>Thu 24 Sep</b> (22.7%). Lowest: <b>Sun 27 Sep</b> (10.9%).</p>
+
+  <h2>Day-by-Day Table</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Day</th><th class="num">Total</th><th class="num">Completed</th><th class="num">Completed %</th><th class="num">Cancelled</th><th class="num">Cancelled %</th><th class="num">Rider</th><th class="num">Driver</th></tr></thead>
+    <tbody>
+<tr><td>Mon 21 Sep</td><td class="num">137</td><td class="num green">119</td><td class="num">86.9%</td><td class="num red">18</td><td class="num">13.1%</td><td class="num">16</td><td class="num">2</td></tr>
+<tr><td>Tue 22 Sep</td><td class="num">190</td><td class="num green">152</td><td class="num">80.0%</td><td class="num red">38</td><td class="num">20.0%</td><td class="num">38</td><td class="num">0</td></tr>
+<tr><td>Wed 23 Sep</td><td class="num">268</td><td class="num green">225</td><td class="num">84.0%</td><td class="num red">43</td><td class="num">16.0%</td><td class="num">42</td><td class="num">1</td></tr>
+<tr><td>Thu 24 Sep</td><td class="num">384</td><td class="num green">297</td><td class="num">77.3%</td><td class="num red">87</td><td class="num">22.7%</td><td class="num">84</td><td class="num">3</td></tr>
+<tr><td>Fri 25 Sep</td><td class="num">409</td><td class="num green">330</td><td class="num">80.7%</td><td class="num red">79</td><td class="num">19.3%</td><td class="num">73</td><td class="num">6</td></tr>
+<tr><td>Sat 26 Sep</td><td class="num">230</td><td class="num green">191</td><td class="num">83.0%</td><td class="num red">39</td><td class="num">17.0%</td><td class="num">33</td><td class="num">6</td></tr>
+<tr><td>Sun 27 Sep</td><td class="num">156</td><td class="num green">139</td><td class="num">89.1%</td><td class="num red">17</td><td class="num">10.9%</td><td class="num">17</td><td class="num">0</td></tr>
+<tr><td>Mon 28 Sep</td><td class="num">195</td><td class="num green">160</td><td class="num">82.1%</td><td class="num red">35</td><td class="num">17.9%</td><td class="num">35</td><td class="num">0</td></tr>
+<tr><td>Tue 29 Sep</td><td class="num">145</td><td class="num green">123</td><td class="num">84.8%</td><td class="num red">22</td><td class="num">15.2%</td><td class="num">21</td><td class="num">1</td></tr>
+<tr><td>Wed 30 Sep</td><td class="num">181</td><td class="num green">148</td><td class="num">81.8%</td><td class="num red">33</td><td class="num">18.2%</td><td class="num">32</td><td class="num">1</td></tr>
+<tr class="tot-row"><td>Total</td><td class="num">2295</td><td class="num green">1884</td><td class="num">82.1%</td><td class="num red">411</td><td class="num">17.9%</td><td class="num">391</td><td class="num">20</td></tr>
+    </tbody></table></div>
+
+  <h2>Wider Context: All Data Supplied</h2>
+  <p class="note">All five files combined (12323 unique trips, 25 May – 30 Sep operating days), grouped in 25th-to-24th periods. The first and last rows are partial.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Period</th><th class="num">Total</th><th class="num">Completed</th><th class="num">Cancelled</th><th class="num">Cancelled %</th></tr></thead>
+    <tbody>
+<tr><td>25 May – 24 Jun 2026</td><td class="num">1694</td><td class="num green">1090</td><td class="num red">604</td><td class="num">35.7%</td></tr>
+<tr><td>25 Jun – 24 Jul 2026</td><td class="num">1662</td><td class="num green">1274</td><td class="num red">388</td><td class="num">23.3%</td></tr>
+<tr><td>25 Jul – 24 Aug 2026</td><td class="num">2371</td><td class="num green">1939</td><td class="num red">432</td><td class="num">18.2%</td></tr>
+<tr><td>25 Aug – 24 Sep 2026</td><td class="num">5280</td><td class="num green">4267</td><td class="num red">1013</td><td class="num">19.2%</td></tr>
+<tr><td>25 Sep – 30 Sep 2026</td><td class="num">1316</td><td class="num green">1091</td><td class="num red">225</td><td class="num">17.1%</td></tr>
+
+    </tbody></table></div>
+</body>
+</html>

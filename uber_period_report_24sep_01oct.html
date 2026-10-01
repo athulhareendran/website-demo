@@ -104,6 +104,10 @@
   .dl{font-size:11px;font-weight:600;margin-top:8px}.dl2{font-size:10px;color:#9a988c}.rate{font-size:11px;font-weight:700;color:#b40e0e;margin-top:4px}
   .insight{font-size:13.5px;color:#4a4a42;margin:0 0 6px}
   @media (max-width:720px){.dchart{min-width:560px}.chart-scroll2{overflow-x:auto}}
+  .kpi-card{display:flex;flex-direction:column}
+  .kpi-label{min-height:2.7em;line-height:1.35}
+  .kpi-value{white-space:nowrap;line-height:1.2}
+  .kpi-value small{font-size:14px;font-weight:600;margin-left:2px}
 </style>
 </head>
 <body>
@@ -111,8 +115,8 @@
   <p class="subtitle">Enterprises Rent-a-Car, Bahrain &nbsp;•&nbsp; 24 September 4:00 AM &ndash; 1 October 4:00 AM 2026 (7 operating days)</p>
   <div class="kpi-grid">
     <div class="kpi-card"><div class="kpi-label">Total Trips</div><div class="kpi-value">1700</div></div>
-    <div class="kpi-card"><div class="kpi-label">Completed</div><div class="kpi-value green">1388 (81.6%)</div></div>
-    <div class="kpi-card"><div class="kpi-label">Cancelled</div><div class="kpi-value red">312 (18.4%)</div></div>
+    <div class="kpi-card"><div class="kpi-label">Completed</div><div class="kpi-value green">1388 <small>81.6%</small></div></div>
+    <div class="kpi-card"><div class="kpi-label">Cancelled</div><div class="kpi-value red">312 <small>18.4%</small></div></div>
     <div class="kpi-card"><div class="kpi-label">Rider Cancelled</div><div class="kpi-value red">295</div></div>
     <div class="kpi-card"><div class="kpi-label">Driver Cancelled</div><div class="kpi-value red">17</div></div>
     <div class="kpi-card"><div class="kpi-label">Avg Trips / Day</div><div class="kpi-value">243</div></div>

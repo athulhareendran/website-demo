@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Uber Black Operations Overview — 30 September 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html { overflow-x: hidden; }
+  body {
+    font-family: "Poppins", Arial, sans-serif;
+    background: #faf9f5;
+    color: #141413;
+    padding: 48px;
+    max-width: 1280px;
+    margin: 0 auto;
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+  h1 { font-family: "Poppins", Arial, sans-serif; font-weight: 600; font-size: 30px; margin-bottom: 4px; }
+  h2 { font-family: "Poppins", Arial, sans-serif; font-weight: 600; font-size: 21px; margin-top: 48px; margin-bottom: 14px; }
+  p.subtitle { font-size: 13.5px; color: #8a8a82; margin-top: 0; margin-bottom: 30px; }
+  p.note { font-size: 12.5px; color: #888; margin-top: -6px; margin-bottom: 18px; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 16px; margin-bottom: 8px; }
+  .kpi-card { background: #fff; border-radius: 14px; padding: 18px 20px; border: 1px solid #f0efe6; box-shadow: 0 2px 10px rgba(20,20,19,0.05); }
+  .kpi-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; color: #8a8a82; font-weight: 800; margin-bottom: 8px; }
+  .kpi-value { font-family: "Poppins", Arial, sans-serif; font-weight: 800; font-size: 26px; }
+  .kpi-value.green { color: #007a4d; }
+  .kpi-value.red { color: #b40e0e; }
+  .cols { display: flex; gap: 20px; flex-wrap: wrap; }
+  .cols > div { flex: 1; min-width: 300px; }
+  .chart-card { background: #fff; border-radius: 14px; box-shadow: 0 2px 10px rgba(20,20,19,0.06); border: 1px solid #f0efe6; padding: 24px 26px 16px; }
+  .chart-title { font-size: 11px; color: #8a8a82; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 20px; font-weight: 600; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .chart-title .peak { color: #141413; font-weight: 600; text-transform: none; letter-spacing: 0; font-size: 13.5px; font-family: "Poppins", Arial, sans-serif; }
+  .chart-bars { display: flex; align-items: flex-end; gap: 4px; height: 150px; padding-bottom: 10px; position: relative; background-image: repeating-linear-gradient(to top, #eeece1 0, #eeece1 1px, transparent 1px, transparent 25%); background-size: 100% 100%; }
+  .chart-bar-wrap { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; position: relative; }
+  .chart-bar { width: 100%; max-width: 20px; border-radius: 5px 5px 2px 2px; min-height: 3px; position: relative; box-shadow: inset 0 -6px 8px -4px rgba(0,0,0,0.12); }
+  .chart-bar.completed-bar { background: linear-gradient(180deg, #17b378 0%, #007a4d 100%); }
+  .chart-bar.cancelled-bar { background: linear-gradient(180deg, #ef5a5a 0%, #b40e0e 100%); }
+  .chart-bar.peak { box-shadow: 0 0 0 2px #faf9f5, 0 0 0 3.5px #141413, inset 0 -6px 8px -4px rgba(0,0,0,0.15); }
+  .chart-bar-count { font-size: 10px; font-weight: 600; color: #141413; margin-bottom: 5px; font-variant-numeric: tabular-nums; }
+  .chart-bar-count.peak-count-completed { color: #007a4d; }
+  .chart-bar-count.peak-count-cancelled { color: #b40e0e; }
+  .chart-labels { display: flex; gap: 4px; margin-top: 8px; }
+  .chart-label { flex: 1; min-width: 0; text-align: center; font-size: 9.5px; font-weight: 600; color: #9a988c; white-space: nowrap; overflow: visible; letter-spacing: 0.01em; }
+  table { border-collapse: collapse; width: 100%; background: #fff; border-radius: 12px; overflow: hidden; font-size: 13px; }
+  .table-wrap { background: #fff; border-radius: 14px; border: 1px solid #f0efe6; box-shadow: 0 2px 10px rgba(20,20,19,0.05); overflow-x: auto; }
+  .table-wrap table { min-width: 480px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid #f0efe6; }
+  th { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em; color: #8a8a82; font-weight: 600; background: #fbfaf6; }
+  tr:last-child td { border-bottom: none; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .day-badge { display: inline-block; background: #f3f1e8; color: #6b6a5f; font-size: 10.5px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; }
+
+  .alert-card { background: #fff7f0; border: 1px solid #f3d9b8; border-radius: 14px; padding: 20px 22px; margin-bottom: 20px; }
+  .alert-title { font-weight: 600; font-size: 14px; color: #a35a1a; margin-bottom: 8px; }
+  .alert-text { font-size: 13.5px; color: #4a3a2a; }
+  .incident-table { font-size: 12.5px; }
+  .incident-table th, .incident-table td { padding: 9px 10px; }
+  .same-addr { color: #b45309; font-weight: 600; }
+  .badge { display: inline-block; font-size: 10.5px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+  .badge-cancel { background: #fbe9e9; color: #b40e0e; }
+  .table-wrap table.incident-table { min-width: 620px; }
+
+  @page { size: A4; margin: 12mm; }
+  @media print {
+    body { zoom: 0.75; }
+    .table-wrap table { min-width: 0 !important; }
+    .cols th, .cols td { padding: 6px 8px !important; font-size: 11px !important; }
+  }
+
+  @media (max-width: 720px) {
+    body { padding: 24px 16px; }
+    h1 { font-size: 21px; }
+    h2 { font-size: 16px; margin-top: 34px; margin-bottom: 10px; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .kpi-card { padding: 14px 14px; }
+    .kpi-value { font-size: 20px; }
+    .cols { gap: 14px; overflow-x: hidden; }
+    .cols > div { min-width: 0 !important; }
+    .chart-card { padding: 16px 14px 10px; max-width: 100%; overflow-x: hidden; }
+    .chart-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; max-width: 100%; }
+    .chart-bars, .chart-labels { min-width: 620px; height: 110px; }
+    .chart-labels { height: auto; }
+    .chart-bar-count { font-size: 8px; }
+    .chart-label { font-size: 8px; }
+  }
+</style>
+</head>
+<body>
+  <h1>Uber Black Operations Overview</h1>
+  <p class="subtitle">Enterprises Rent-a-Car, Bahrain &nbsp;•&nbsp; 30 September 4:00 AM &ndash; 1 October 4:00 AM 2026</p>
+
+  <div class="kpi-grid">
+    <div class="kpi-card"><div class="kpi-label">Total Trips</div><div class="kpi-value">181</div></div>
+    <div class="kpi-card"><div class="kpi-label">Completed</div><div class="kpi-value green">148 (81.8%)</div></div>
+    <div class="kpi-card"><div class="kpi-label">Cancelled</div><div class="kpi-value red">33 (18.2%)</div></div>
+    <div class="kpi-card"><div class="kpi-label">Effective Completion Rate</div><div class="kpi-value green">85.1%</div></div>
+    <div class="kpi-card"><div class="kpi-label">True Lost Rate</div><div class="kpi-value red">14.9%</div></div>
+  </div>
+
+  <h2>Peak Hours</h2>
+  <div class="cols">
+    <div class="chart-card">
+      <div class="chart-title">Completions by Hour — <span class="peak">Peak: 2 PM (16 trips)</span></div>
+      <div class="chart-scroll">
+      <div class="chart-bars">
+          <div class="chart-bar-wrap"><div class="chart-bar-count">1</div><div class="chart-bar completed-bar" style="height:6%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">1</div><div class="chart-bar completed-bar" style="height:6%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar completed-bar" style="height:0%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">4</div><div class="chart-bar completed-bar" style="height:25%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">2</div><div class="chart-bar completed-bar" style="height:12%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">6</div><div class="chart-bar completed-bar" style="height:38%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">6</div><div class="chart-bar completed-bar" style="height:38%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">2</div><div class="chart-bar completed-bar" style="height:12%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">5</div><div class="chart-bar completed-bar" style="height:31%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">7</div><div class="chart-bar completed-bar" style="height:44%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count peak-count-completed">16</div><div class="chart-bar completed-bar peak" style="height:100%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">8</div><div class="chart-bar completed-bar" style="height:50%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">7</div><div class="chart-bar completed-bar" style="height:44%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">3</div><div class="chart-bar completed-bar" style="height:19%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">6</div><div class="chart-bar completed-bar" style="height:38%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">13</div><div class="chart-bar completed-bar" style="height:81%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">13</div><div class="chart-bar completed-bar" style="height:81%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">8</div><div class="chart-bar completed-bar" style="height:50%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">15</div><div class="chart-bar completed-bar" style="height:94%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">10</div><div class="chart-bar completed-bar" style="height:62%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">3</div><div class="chart-bar completed-bar" style="height:19%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">6</div><div class="chart-bar completed-bar" style="height:38%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">6</div><div class="chart-bar completed-bar" style="height:38%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar completed-bar" style="height:0%"></div></div>
+      </div>
+      <div class="chart-labels">
+          <div class="chart-label">4AM</div><div class="chart-label">&nbsp;</div><div class="chart-label">&nbsp;</div><div class="chart-label">7AM</div><div class="chart-label">&nbsp;</div><div class="chart-label">&nbsp;</div><div class="chart-label">10AM</div><div class="chart-label">&nbsp;</div><div class="chart-label">&nbsp;</div><div class="chart-label">1PM</div><div class="chart-label">&nbsp;</div><div class="chart-label">&nbsp;</div><div class="chart-label">4PM</div><div class="chart-label">&nbsp;</div><div class="chart-label">&nbsp;</div><div class="chart-label">7PM</div><div class="chart-label">&nbsp;</div><div class="chart-label">&nbsp;</div><div class="chart-label">10PM</div><div class="chart-label">&nbsp;</div><div class="chart-label">&nbsp;</div><div class="chart-label">1AM</div><div class="chart-label">&nbsp;</div><div class="chart-label">&nbsp;</div>
+      </div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Cancellations by Hour — <span class="peak">Peak: 12 AM (5 trips)</span></div>
+      <div class="chart-scroll">
+      <div class="chart-bars">
+          <div class="chart-bar-wrap"><div class="chart-bar cancelled-bar" style="height:0%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar cancelled-bar" style="height:0%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar cancelled-bar" style="height:0%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">3</div><div class="chart-bar cancelled-bar" style="height:60%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">1</div><div class="chart-bar cancelled-bar" style="height:20%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">2</div><div class="chart-bar cancelled-bar" style="height:40%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar cancelled-bar" style="height:0%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">2</div><div class="chart-bar cancelled-bar" style="height:40%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">2</div><div class="chart-bar cancelled-bar" style="height:40%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar cancelled-bar" style="height:0%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar cancelled-bar" style="height:0%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">1</div><div class="chart-bar cancelled-bar" style="height:20%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">2</div><div class="chart-bar cancelled-bar" style="height:40%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">3</div><div class="chart-bar cancelled-bar" style="height:60%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar cancelled-bar" style="height:0%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">1</div><div class="chart-bar cancelled-bar" style="height:20%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">4</div><div class="chart-bar cancelled-bar" style="height:80%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">1</div><div class="chart-bar cancelled-bar" style="height:20%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">2</div><div class="chart-bar cancelled-bar" style="height:40%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">2</div><div class="chart-bar cancelled-bar" style="height:40%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count peak-count-cancelled">5</div><div class="chart-bar cancelled-bar peak" style="height:100%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">1</div><div class="chart-bar cancelled-bar" style="height:20%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar-count">1</div><div class="chart-bar cancelled-bar" style="height:20%"></div></div>
+          <div class="chart-bar-wrap"><div class="chart-bar cancelled-bar" style="height:0%"></div></div>
+      </div>
+      <div class="chart-labels">
+          <div class="chart-label">4AM</div><div class="chart-label">&nbsp;</div><div class="chart-label">&nbsp;</div><div class="chart-label">7AM</div><div class="chart-label">&nbsp;</div><div class="chart-label">&nbsp;</div><div class="chart-label">10AM</div><div class="chart-label">&nbsp;</div><div class="chart-label">&nbsp;</div><div class="chart-label">1PM</div><div class="chart-label">&nbsp;</div><div class="chart-label">&nbsp;</div><div class="chart-label">4PM</div><div class="chart-label">&nbsp;</div><div class="chart-label">&nbsp;</div><div class="chart-label">7PM</div><div class="chart-label">&nbsp;</div><div class="chart-label">&nbsp;</div><div class="chart-label">10PM</div><div class="chart-label">&nbsp;</div><div class="chart-label">&nbsp;</div><div class="chart-label">1AM</div><div class="chart-label">&nbsp;</div><div class="chart-label">&nbsp;</div>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Cancellation Recovery</h2>
+  <p class="note">A "reride" is a cancellation followed by a completed trip from the same pickup address within 30 minutes, by any driver.</p>
+  <div class="kpi-grid">
+    <div class="kpi-card"><div class="kpi-label">Rerides (Recovered)</div><div class="kpi-value green">6</div></div>
+    <div class="kpi-card"><div class="kpi-label">— Same Driver</div><div class="kpi-value">4</div></div>
+    <div class="kpi-card"><div class="kpi-label">— Different Driver</div><div class="kpi-value">2</div></div>
+    <div class="kpi-card"><div class="kpi-label">Cancelled Without Reride</div><div class="kpi-value red">27</div></div>
+    <div class="kpi-card"><div class="kpi-label">Repeat Cancellation Customers (Est.)</div><div class="kpi-value">2</div></div>
+  </div>
+
+  <h2>Incident: Repeat Cancellation Cluster</h2>
+  <p class="subtitle" style="margin-bottom:14px;">2 short-window repeat cancellation clusters in this period — same pickup address cancelled multiple times within minutes.</p>
+  <div class="alert-card">
+    <div class="alert-title">⚠️ "المحرق، البحرين" — 3 cancellations in 3 minutes, same driver (00:07:48–00:10:26)</div>
+    <div class="alert-text">Shibumon Thajudeen cancelled the same pickup/drop-off address 3 times back-to-back — a stuck-request pattern rather than independent demand. No completed trip followed from that address (lost demand).</div>
+  </div>
+  <div class="alert-card">
+    <div class="alert-title">⚠️ "Building No 1019 Rd No 2417, Manama 324, Bahrain" — 2 cancellations in 17 minutes, multiple drivers (01:45:24–02:02:17)</div>
+    <div class="alert-text">Inash Puleekandiyil, Abishek Rajesh cancelled the same pickup/drop-off address 2 times back-to-back — a stuck-request pattern rather than independent demand. No completed trip followed from that address (lost demand).</div>
+  </div>
+  <div class="table-wrap">
+    <table class="incident-table">
+      <thead><tr><th>Time</th><th>Driver</th><th>Vehicle</th><th>Plate</th><th>Status</th><th>Address</th></tr></thead>
+      <tbody>
+        <tr><td class="num">00:07:48</td><td>Shibumon Thajudeen</td><td>Vehicle name n/a</td><td class="num">472201</td><td><span class="badge badge-cancel">Cancelled</span></td><td class="same-addr">المحرق، البحرين (pickup = drop-off)</td></tr>
+        <tr><td class="num">00:08:36</td><td>Shibumon Thajudeen</td><td>Vehicle name n/a</td><td class="num">472201</td><td><span class="badge badge-cancel">Cancelled</span></td><td class="same-addr">المحرق، البحرين (pickup = drop-off)</td></tr>
+        <tr><td class="num">00:10:26</td><td>Shibumon Thajudeen</td><td>Vehicle name n/a</td><td class="num">472201</td><td><span class="badge badge-cancel">Cancelled</span></td><td class="same-addr">المحرق، البحرين (pickup = drop-off)</td></tr>
+        <tr><td class="num">01:45:24</td><td>Inash Puleekandiyil</td><td>Audi A6 (2026)</td><td class="num">686787</td><td><span class="badge badge-cancel">Cancelled</span></td><td class="same-addr">Building No 1019 Rd No 2417, Manama 324, Bahrain (pickup = drop-off)</td></tr>
+        <tr><td class="num">02:02:17</td><td>Abishek Rajesh</td><td>Genesis G80 (2025)</td><td class="num">255684</td><td><span class="badge badge-cancel">Cancelled</span></td><td class="same-addr">Building No 1019 Rd No 2417, Manama 324, Bahrain (pickup = drop-off)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Driver Performance</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Driver</th><th class="num">Total</th><th class="num">Completed</th><th class="num">Completion %</th><th class="num">Cancelled</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Abdul Nassar PARAMBIL</td><td class="num">15</td><td class="num">9</td><td class="num">60.0%</td><td class="num">6</td></tr>
+        <tr><td>2</td><td>Vadakkayil Shakkur</td><td class="num">14</td><td class="num">11</td><td class="num">78.6%</td><td class="num">3</td></tr>
+        <tr><td>3</td><td>Sunil Mavila</td><td class="num">12</td><td class="num">10</td><td class="num">83.3%</td><td class="num">2</td></tr>
+        <tr><td>4</td><td>Nisamudheen Karuppamveettil</td><td class="num">11</td><td class="num">9</td><td class="num">81.8%</td><td class="num">2</td></tr>
+        <tr><td>5</td><td>Kabeer Vettakkarakandy</td><td class="num">10</td><td class="num">9</td><td class="num">90.0%</td><td class="num">1</td></tr>
+        <tr><td>6</td><td>Rafiqul Soruj</td><td class="num">10</td><td class="num">9</td><td class="num">90.0%</td><td class="num">1</td></tr>
+        <tr><td>7</td><td>Abishek Rajesh</td><td class="num">10</td><td class="num">8</td><td class="num">80.0%</td><td class="num">2</td></tr>
+        <tr><td>8</td><td>Abdul Bareq Sirajul Islam</td><td class="num">9</td><td class="num">6</td><td class="num">66.7%</td><td class="num">3</td></tr>
+        <tr><td>9</td><td>Shibumon Thajudeen</td><td class="num">9</td><td class="num">4</td><td class="num">44.4%</td><td class="num">5</td></tr>
+        <tr><td>10</td><td>Adnan Nabi</td><td class="num">8</td><td class="num">8</td><td class="num">100.0%</td><td class="num">0</td></tr>
+        <tr><td>11</td><td>Mohan Tharu</td><td class="num">8</td><td class="num">8</td><td class="num">100.0%</td><td class="num">0</td></tr>
+        <tr><td>12</td><td>Nisar Syed</td><td class="num">8</td><td class="num">8</td><td class="num">100.0%</td><td class="num">0</td></tr>
+        <tr><td>13</td><td>Sijo Chathely</td><td class="num">8</td><td class="num">6</td><td class="num">75.0%</td><td class="num">2</td></tr>
+        <tr><td>14</td><td>Ranjish Poyil</td><td class="num">7</td><td class="num">7</td><td class="num">100.0%</td><td class="num">0</td></tr>
+        <tr><td>15</td><td>Ahtisham Zahid</td><td class="num">7</td><td class="num">5</td><td class="num">71.4%</td><td class="num">2</td></tr>
+        <tr><td>16</td><td>Jamal Parambath</td><td class="num">6</td><td class="num">6</td><td class="num">100.0%</td><td class="num">0</td></tr>
+        <tr><td>17</td><td>Inash Puleekandiyil</td><td class="num">6</td><td class="num">5</td><td class="num">83.3%</td><td class="num">1</td></tr>
+        <tr><td>18</td><td>Muhammed Kandi</td><td class="num">5</td><td class="num">5</td><td class="num">100.0%</td><td class="num">0</td></tr>
+        <tr><td>19</td><td>Salim kunju</td><td class="num">5</td><td class="num">5</td><td class="num">100.0%</td><td class="num">0</td></tr>
+        <tr><td>20</td><td>Mohammed Akmal</td><td class="num">5</td><td class="num">4</td><td class="num">80.0%</td><td class="num">1</td></tr>
+        <tr><td>21</td><td>Nizam Ali</td><td class="num">5</td><td class="num">3</td><td class="num">60.0%</td><td class="num">2</td></tr>
+        <tr><td>22</td><td>Wahab Ashraf</td><td class="num">3</td><td class="num">3</td><td class="num">100.0%</td><td class="num">0</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Vehicle Cancellations</h2>
+  <p class="note" style="margin-top:-6px;">Ranked by number of cancellations per vehicle (by plate). Vehicle names are matched from earlier fleet exports, not this CSV; "Vehicle name n/a" means the plate was not in those exports.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Vehicle</th><th class="num">Plate</th><th class="num">Total Trips</th><th class="num">Cancelled</th><th class="num">Cancel %</th><th>Driver(s)</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Hyundai Staria (2024)</td><td class="num">126800</td><td class="num">15</td><td class="num">6</td><td class="num">40.0%</td><td>Abdul Nassar PARAMBIL</td></tr>
+        <tr><td>2</td><td>Genesis G80 (2025)</td><td class="num">255684</td><td class="num">22</td><td class="num">5</td><td class="num">22.7%</td><td>Vadakkayil Shakkur, Abishek Rajesh</td></tr>
+        <tr><td>3</td><td>Vehicle name n/a</td><td class="num">472201</td><td class="num">9</td><td class="num">5</td><td class="num">55.6%</td><td>Shibumon Thajudeen</td></tr>
+        <tr><td>4</td><td>Vehicle name n/a</td><td class="num">687676</td><td class="num">9</td><td class="num">3</td><td class="num">33.3%</td><td>Abdul Bareq Sirajul Islam</td></tr>
+        <tr><td>5</td><td>Vehicle name n/a</td><td class="num">532100</td><td class="num">12</td><td class="num">2</td><td class="num">16.7%</td><td>Sunil Mavila</td></tr>
+        <tr><td>6</td><td>Hyundai Staria (2024)</td><td class="num">567200</td><td class="num">11</td><td class="num">2</td><td class="num">18.2%</td><td>Nisamudheen Karuppamveettil</td></tr>
+        <tr><td>7</td><td>Vehicle name n/a</td><td class="num">479266</td><td class="num">8</td><td class="num">2</td><td class="num">25.0%</td><td>Kabeer Vettakkarakandy, Mohammed Akmal</td></tr>
+        <tr><td>8</td><td>Vehicle name n/a</td><td class="num">479249</td><td class="num">8</td><td class="num">2</td><td class="num">25.0%</td><td>Sijo Chathely</td></tr>
+        <tr><td>9</td><td>Mercedes-Benz E 200 (2022)</td><td class="num">89800</td><td class="num">7</td><td class="num">2</td><td class="num">28.6%</td><td>Ahtisham Zahid</td></tr>
+        <tr><td>10</td><td>Genesis G80 (2025)</td><td class="num">255469</td><td class="num">5</td><td class="num">2</td><td class="num">40.0%</td><td>Nizam Ali</td></tr>
+        <tr><td>11</td><td>Hyundai Staria (2025)</td><td class="num">692894</td><td class="num">10</td><td class="num">1</td><td class="num">10.0%</td><td>Rafiqul Soruj</td></tr>
+        <tr><td>12</td><td>Audi A6 (2026)</td><td class="num">686787</td><td class="num">6</td><td class="num">1</td><td class="num">16.7%</td><td>Inash Puleekandiyil</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Vehicle Completions</h2>
+  <p class="note" style="margin-top:-6px;">Top 10 vehicles ranked by number of completed trips.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Vehicle</th><th class="num">Plate</th><th class="num">Total Trips</th><th class="num">Completed</th><th class="num">Completion %</th><th>Driver(s)</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Genesis G80 (2025)</td><td class="num">255684</td><td class="num">22</td><td class="num">17</td><td class="num">77.3%</td><td>Vadakkayil Shakkur, Abishek Rajesh</td></tr>
+        <tr><td>2</td><td>Vehicle name n/a</td><td class="num">532100</td><td class="num">12</td><td class="num">10</td><td class="num">83.3%</td><td>Sunil Mavila</td></tr>
+        <tr><td>3</td><td>BMW 5-series (2025)</td><td class="num">472405</td><td class="num">10</td><td class="num">10</td><td class="num">100.0%</td><td>Abishek Rajesh, Nisar Syed</td></tr>
+        <tr><td>4</td><td>Hyundai Staria (2024)</td><td class="num">126800</td><td class="num">15</td><td class="num">9</td><td class="num">60.0%</td><td>Abdul Nassar PARAMBIL</td></tr>
+        <tr><td>5</td><td>Hyundai Staria (2024)</td><td class="num">567200</td><td class="num">11</td><td class="num">9</td><td class="num">81.8%</td><td>Nisamudheen Karuppamveettil</td></tr>
+        <tr><td>6</td><td>Hyundai Staria (2025)</td><td class="num">692894</td><td class="num">10</td><td class="num">9</td><td class="num">90.0%</td><td>Rafiqul Soruj</td></tr>
+        <tr><td>7</td><td>Vehicle name n/a</td><td class="num">505253</td><td class="num">8</td><td class="num">8</td><td class="num">100.0%</td><td>Mohan Tharu</td></tr>
+        <tr><td>8</td><td>Mercedes-Benz E-Class (2026)</td><td class="num">568400</td><td class="num">8</td><td class="num">8</td><td class="num">100.0%</td><td>Adnan Nabi</td></tr>
+        <tr><td>9</td><td>Vehicle name n/a</td><td class="num">255490</td><td class="num">7</td><td class="num">7</td><td class="num">100.0%</td><td>Ranjish Poyil</td></tr>
+        <tr><td>10</td><td>Vehicle name n/a</td><td class="num">255605</td><td class="num">7</td><td class="num">7</td><td class="num">100.0%</td><td>Kabeer Vettakkarakandy</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Pickup Locations</h2>
+  <div class="cols">
+    <div>
+      <div class="day-badge">Completed Trips</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Area</th><th class="num">Trips</th><th class="num">%</th></tr></thead>
+          <tbody>
+            <tr><td>Manama</td><td class="num">95</td><td class="num">64.2%</td></tr>
+            <tr><td>Other/Unclear address</td><td class="num">13</td><td class="num">8.8%</td></tr>
+            <tr><td>Manama (Seef)</td><td class="num">12</td><td class="num">8.1%</td></tr>
+            <tr><td>Muharraq</td><td class="num">8</td><td class="num">5.4%</td></tr>
+            <tr><td>(blank)</td><td class="num">3</td><td class="num">2.0%</td></tr>
+            <tr><td>Al Sayh</td><td class="num">2</td><td class="num">1.4%</td></tr>
+            <tr><td>Bu Quwah</td><td class="num">2</td><td class="num">1.4%</td></tr>
+            <tr><td>Riffa</td><td class="num">2</td><td class="num">1.4%</td></tr>
+            <tr><td>Saar</td><td class="num">2</td><td class="num">1.4%</td></tr>
+            <tr><td>Amwaj</td><td class="num">1</td><td class="num">0.7%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div class="day-badge">Cancelled Trips</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Area</th><th class="num">Trips</th><th class="num">%</th></tr></thead>
+          <tbody>
+            <tr><td>Manama</td><td class="num">14</td><td class="num">42.4%</td></tr>
+            <tr><td>Muharraq</td><td class="num">5</td><td class="num">15.2%</td></tr>
+            <tr><td>Other/Unclear address</td><td class="num">5</td><td class="num">15.2%</td></tr>
+            <tr><td>Manama (Seef)</td><td class="num">2</td><td class="num">6.1%</td></tr>
+            <tr><td>Riffa</td><td class="num">2</td><td class="num">6.1%</td></tr>
+            <tr><td>Al Sayh</td><td class="num">1</td><td class="num">3.0%</td></tr>
+            <tr><td>Bu Quwah</td><td class="num">1</td><td class="num">3.0%</td></tr>
+            <tr><td>Jid Ali</td><td class="num">1</td><td class="num">3.0%</td></tr>
+            <tr><td>Saar</td><td class="num">1</td><td class="num">3.0%</td></tr>
+            <tr><td>Sitra</td><td class="num">1</td><td class="num">3.0%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

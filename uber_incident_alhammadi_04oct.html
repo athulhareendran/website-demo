@@ -92,20 +92,29 @@
   th,td{white-space:nowrap} th.num{text-align:right}
   .reason-card{background:#fff;border:1px solid #f0efe6;border-radius:14px;padding:20px 22px;box-shadow:0 2px 10px rgba(20,20,19,.05);font-size:14px}
   .kpi-value.sm{font-size:17px;white-space:nowrap}
-  .kpi-grid{margin-bottom:24px}
-  @media print{body,body *{color:#000 !important}.badge{border:1px solid #000;background:#fff !important}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}.table-wrap table{min-width:0 !important}.uuid{font-size:9.5px}th,td{white-space:normal}}
+  .ic-grid{display:grid;grid-template-columns:1.7fr repeat(4,1fr);gap:14px;margin-bottom:26px}
+  .ic-card{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid #ece9dd;border-radius:16px;padding:18px 18px;box-shadow:0 2px 10px rgba(20,20,19,.05)}
+  .ic{flex:none;width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+  .ic-body{min-width:0}
+  .ic-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:#6b6a5f;font-weight:700;margin-bottom:6px}
+  .ic-val{font-size:21px;font-weight:700;line-height:1.15;color:#141413;white-space:nowrap}
+  .ic-card:nth-child(2) .ic-val{color:#b40e0e}
+  .ic-sub{font-size:12px;color:#6b6a5f;margin-top:6px;line-height:1.35}
+  @media (max-width:1000px){.ic-grid{grid-template-columns:repeat(2,1fr)}.ic-card.wide{grid-column:1/-1}}
+  @media (max-width:520px){.ic-grid{grid-template-columns:1fr}.ic-val{white-space:normal}}
+  @media print{body,body *{color:#000 !important}.ic-card{box-shadow:none !important;border:1px solid #999 !important;break-inside:avoid}.ic{background:#fff !important;border:1px solid #999}.ic svg{stroke:#000}.badge{border:1px solid #000;background:#fff !important}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}.table-wrap table{min-width:0 !important}.uuid{font-size:9.5px}th,td{white-space:normal}}
 </style>
 </head>
 <body>
   <h1>Cancelled Trips &mdash; Hamdan Alhammadi</h1>
   <p class="subtitle">4 October 2026 &nbsp;•&nbsp; 10:35&ndash;10:41 AM &nbsp;•&nbsp; Shop no. 2102 Level 2, Manama &nbsp;•&nbsp; Reason: vehicle preference, needs a bigger car</p>
 
-  <div class="kpi-grid">
-    <div class="kpi-card"><div class="kpi-label">Customer</div><div class="kpi-value sm">Hamdan Alhammadi</div></div>
-    <div class="kpi-card"><div class="kpi-label">Cancellations</div><div class="kpi-value red">7</div></div>
-    <div class="kpi-card"><div class="kpi-label">Time Window</div><div class="kpi-value sm">5 min 54 sec</div></div>
-    <div class="kpi-card"><div class="kpi-label">Drivers Involved</div><div class="kpi-value">3</div></div>
-    <div class="kpi-card"><div class="kpi-label">Cancelled By</div><div class="kpi-value sm">Rider (all 7)</div></div>
+  <div class="ic-grid">
+    <div class="ic-card wide"><div class="ic" style="background:#eceae0;color:#141413"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div><div class="ic-body"><div class="ic-label">Customer</div><div class="ic-val">Hamdan Alhammadi</div><div class="ic-sub">Shop no. 2102 Level 2, Manama</div></div></div>
+    <div class="ic-card "><div class="ic" style="background:#fbe9e9;color:#b40e0e"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 8.5l7 7M15.5 8.5l-7 7"/></svg></div><div class="ic-body"><div class="ic-label">Cancellations</div><div class="ic-val">7</div><div class="ic-sub">On 4 Oct 2026</div></div></div>
+    <div class="ic-card "><div class="ic" style="background:#fdf1d8;color:#8a5a00"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div class="ic-body"><div class="ic-label">Time Window</div><div class="ic-val">5 min 54 sec</div><div class="ic-sub">10:35:46 &ndash; 10:41:40</div></div></div>
+    <div class="ic-card "><div class="ic" style="background:#e4ecfb;color:#1d4fb3"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16V11l2-5h10l2 5v5M3 16h18M7 19v-3M17 19v-3"/><circle cx="8" cy="13" r=".8"/><circle cx="16" cy="13" r=".8"/></svg></div><div class="ic-body"><div class="ic-label">Drivers</div><div class="ic-val">3</div><div class="ic-sub">3 vehicles</div></div></div>
+    <div class="ic-card "><div class="ic" style="background:#eceae0;color:#141413"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg></div><div class="ic-body"><div class="ic-label">Cancelled By</div><div class="ic-val">Rider</div><div class="ic-sub">Wanted a bigger car</div></div></div>
   </div>
 
   <div class="table-wrap">

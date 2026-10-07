@@ -125,8 +125,10 @@
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:26px}
   .kc{background:#fff;border:1px solid #ece9dd;border-radius:16px;padding:16px 18px;box-shadow:0 2px 10px rgba(20,20,19,.05)}
   .kc .l{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:#6b6a5f;font-weight:700}
-  .kc .v{font-size:28px;font-weight:700;margin-top:8px;line-height:1.1}.kc .s{font-size:12px;color:#6b6a5f;margin-top:6px}
+  .kc .v{font-size:28px;font-weight:700;margin-top:8px;line-height:1.1}.cards.loc3 .kc .v{font-size:24px}.cards.loc3 .kc .l{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.kc .s{font-size:12px;color:#6b6a5f;margin-top:6px}
   .kc.r .v{color:#b40e0e}.kc.g .v{color:#0b5a3b}.kc.am .v{color:#a35a00}
+  .cards.loc3{grid-template-columns:repeat(3,1fr)}
+  @media (max-width:900px){.cards.loc3{grid-template-columns:1fr}}
   .cl{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid #ece9dd;border-radius:14px;padding:14px 16px;margin-bottom:10px}
   .cl .n{flex:none;width:38px;height:38px;border-radius:50%;background:#fbe9e9;color:#b40e0e;font-weight:700;display:flex;align-items:center;justify-content:center}
   .cl .t{font-weight:600;font-size:14px}.cl .s{font-size:12.5px;color:#6b6a5f;margin-top:3px}
@@ -173,10 +175,20 @@
     <div class="kc"><div class="l">Cancelled Once</div><div class="v">6</div><div class="s">Ahmed, Hannen and 4 unnamed</div></div>
   </div>
 
-  <h2>Repeat Pickup Addresses</h2>
-<div class="cl"><div class="n">5</div><div class="b"><div class="t">Ezel Ave, عالي، البحرين</div><div class="s">20:48&ndash;20:51 (4 min) &middot; Wahab Ashraf 3, Mohan Tharu 1, Ranjish Poyil 1 &middot; Recovered by Abishek Rajesh at 20:53</div><div class="s"></div></div></div>
-<div class="cl"><div class="n">4</div><div class="b"><div class="t">Sanad, Bahrain</div><div class="s">20:27&ndash;20:53 (26 min) &middot; Nizam Ali 2, Mohan Tharu 1, Wahab Ashraf 1 &middot; Recovered by Adnan Nabi at 21:01</div><div class="s"></div></div></div>
-<div class="cl"><div class="n">2</div><div class="b"><div class="t">143 طريق رقم 2403، المحرق 224، البحرين</div><div class="s">20:28&ndash;20:29 (47 sec) &middot; Jamal Parambath 2 &middot; No reride</div><div class="s"></div></div></div>
+  <h2>Pickup Locations</h2>
+  <p class="note">Every pickup location with a cancellation in this hour: customer, driver ETA and reride result.</p>
+  <div class="cards loc3">
+<div class="kc r"><div class="l">Sanad</div><div class="v">5 cancellations</div><div class="s">K &middot; ETA 20 to 26 min &middot; 1 reride (Adnan Nabi, 21:01) &middot; 20:25&ndash;20:53</div></div>
+<div class="kc r"><div class="l">Ezel Ave, A&#x27;ali</div><div class="v">5 cancellations</div><div class="s">Shurooq &middot; ETA 2 min, then 18 min &middot; reride by Abishek Rajesh (20:53) &middot; 20:48&ndash;20:51</div></div>
+<div class="kc r"><div class="l">Muharraq, Road 2403</div><div class="v">2 cancellations</div><div class="s">Unnamed customer &middot; ETA about 15 min &middot; no reride &middot; 20:28&ndash;20:29</div></div>
+<div class="kc"><div class="l">Muharraq (area only)</div><div class="v">1 cancellation</div><div class="s">Unnamed customer &middot; ETA about 12 to 15 min (GPS estimate) &middot; no reride &middot; 20:06</div></div>
+<div class="kc"><div class="l">Tariaq Bedon Esm</div><div class="v">1 cancellation</div><div class="s">Unnamed customer &middot; ETA unknown &middot; no reride &middot; 20:08</div></div>
+<div class="kc"><div class="l">Muharraq</div><div class="v">1 cancellation</div><div class="s">Ahmed &middot; ETA 8 min &middot; no reride &middot; 20:14</div></div>
+<div class="kc"><div class="l">Blank address</div><div class="v">1 cancellation</div><div class="s">Unnamed customer &middot; ETA unknown &middot; no reride &middot; 20:16</div></div>
+<div class="kc"><div class="l">332 Rd No 3201, Manama</div><div class="v">1 cancellation</div><div class="s">Hannen &middot; ETA 8 min &middot; reride by Syed Ahmed (20:32) &middot; 20:30</div></div>
+<div class="kc"><div class="l">317 Rd No 1706, Manama</div><div class="v">1 cancellation</div><div class="s">Unnamed customer &middot; ETA about 13 to 15 min (GPS estimate) &middot; no reride &middot; 20:41</div></div>
+<div class="kc"><div class="l">Riffa, 2633</div><div class="v">1 cancellation</div><div class="s">K &middot; ETA 20 min &middot; no reride &middot; 20:47</div></div>
+  </div>
 
   <h2>All 19 Cancellations</h2>
   <p class="note">A reride is a completed trip from the same pickup address within 30 minutes of the cancellation. Rows with a red edge share a pickup address with another cancellation in the hour.</p>

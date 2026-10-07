@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>8 PM Cancellations — 6 October 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html { overflow-x: hidden; }
+  body {
+    font-family: "Poppins", Arial, sans-serif;
+    background: #faf9f5;
+    color: #141413;
+    padding: 48px;
+    max-width: 1280px;
+    margin: 0 auto;
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+  h1 { font-family: "Poppins", Arial, sans-serif; font-weight: 600; font-size: 30px; margin-bottom: 4px; }
+  h2 { font-family: "Poppins", Arial, sans-serif; font-weight: 600; font-size: 21px; margin-top: 48px; margin-bottom: 14px; }
+  p.subtitle { font-size: 13.5px; color: #8a8a82; margin-top: 0; margin-bottom: 30px; }
+  p.note { font-size: 12.5px; color: #888; margin-top: -6px; margin-bottom: 18px; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 16px; margin-bottom: 8px; }
+  .kpi-card { background: #fff; border-radius: 14px; padding: 18px 20px; border: 1px solid #f0efe6; box-shadow: 0 2px 10px rgba(20,20,19,0.05); }
+  .kpi-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; color: #8a8a82; font-weight: 800; margin-bottom: 8px; }
+  .kpi-value { font-family: "Poppins", Arial, sans-serif; font-weight: 800; font-size: 26px; }
+  .kpi-value.green { color: #007a4d; }
+  .kpi-value.red { color: #b40e0e; }
+  .cols { display: flex; gap: 20px; flex-wrap: wrap; }
+  .cols > div { flex: 1; min-width: 300px; }
+  .chart-card { background: #fff; border-radius: 14px; box-shadow: 0 2px 10px rgba(20,20,19,0.06); border: 1px solid #f0efe6; padding: 24px 26px 16px; }
+  .chart-title { font-size: 11px; color: #8a8a82; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 20px; font-weight: 600; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .chart-title .peak { color: #141413; font-weight: 600; text-transform: none; letter-spacing: 0; font-size: 13.5px; font-family: "Poppins", Arial, sans-serif; }
+  .chart-bars { display: flex; align-items: flex-end; gap: 4px; height: 150px; padding-bottom: 10px; position: relative; background-image: repeating-linear-gradient(to top, #eeece1 0, #eeece1 1px, transparent 1px, transparent 25%); background-size: 100% 100%; }
+  .chart-bar-wrap { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; position: relative; }
+  .chart-bar { width: 100%; max-width: 20px; border-radius: 5px 5px 2px 2px; min-height: 3px; position: relative; box-shadow: inset 0 -6px 8px -4px rgba(0,0,0,0.12); }
+  .chart-bar.completed-bar { background: linear-gradient(180deg, #17b378 0%, #007a4d 100%); }
+  .chart-bar.cancelled-bar { background: linear-gradient(180deg, #ef5a5a 0%, #b40e0e 100%); }
+  .chart-bar.peak { box-shadow: 0 0 0 2px #faf9f5, 0 0 0 3.5px #141413, inset 0 -6px 8px -4px rgba(0,0,0,0.15); }
+  .chart-bar-count { font-size: 10px; font-weight: 600; color: #141413; margin-bottom: 5px; font-variant-numeric: tabular-nums; }
+  .chart-bar-count.peak-count-completed { color: #007a4d; }
+  .chart-bar-count.peak-count-cancelled { color: #b40e0e; }
+  .chart-labels { display: flex; gap: 4px; margin-top: 8px; }
+  .chart-label { flex: 1; min-width: 0; text-align: center; font-size: 9.5px; font-weight: 600; color: #9a988c; white-space: nowrap; overflow: visible; letter-spacing: 0.01em; }
+  table { border-collapse: collapse; width: 100%; background: #fff; border-radius: 12px; overflow: hidden; font-size: 13px; }
+  .table-wrap { background: #fff; border-radius: 14px; border: 1px solid #f0efe6; box-shadow: 0 2px 10px rgba(20,20,19,0.05); overflow-x: auto; }
+  .table-wrap table { min-width: 480px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid #f0efe6; }
+  th { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em; color: #8a8a82; font-weight: 600; background: #fbfaf6; }
+  tr:last-child td { border-bottom: none; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .day-badge { display: inline-block; background: #f3f1e8; color: #6b6a5f; font-size: 10.5px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; }
+
+  .alert-card { background: #fff7f0; border: 1px solid #f3d9b8; border-radius: 14px; padding: 20px 22px; margin-bottom: 20px; }
+  .alert-title { font-weight: 600; font-size: 14px; color: #a35a1a; margin-bottom: 8px; }
+  .alert-text { font-size: 13.5px; color: #4a3a2a; }
+  .incident-table { font-size: 12.5px; }
+  .incident-table th, .incident-table td { padding: 9px 10px; }
+  .same-addr { color: #b45309; font-weight: 600; }
+  .badge { display: inline-block; font-size: 10.5px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+  .badge-cancel { background: #fbe9e9; color: #b40e0e; }
+  .table-wrap table.incident-table { min-width: 620px; }
+
+  @page { size: A4; margin: 12mm; }
+  @media print {
+    body { zoom: 0.75; }
+    .table-wrap table { min-width: 0 !important; }
+    .cols th, .cols td { padding: 6px 8px !important; font-size: 11px !important; }
+  }
+
+  @media (max-width: 720px) {
+    body { padding: 24px 16px; }
+    h1 { font-size: 21px; }
+    h2 { font-size: 16px; margin-top: 34px; margin-bottom: 10px; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .kpi-card { padding: 14px 14px; }
+    .kpi-value { font-size: 20px; }
+    .cols { gap: 14px; overflow-x: hidden; }
+    .cols > div { min-width: 0 !important; }
+    .chart-card { padding: 16px 14px 10px; max-width: 100%; overflow-x: hidden; }
+    .chart-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; max-width: 100%; }
+    .chart-bars, .chart-labels { min-width: 620px; height: 110px; }
+    .chart-labels { height: auto; }
+    .chart-bar-count { font-size: 8px; }
+    .chart-label { font-size: 8px; }
+  }
+  .uuid{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;color:#141413;white-space:nowrap}
+  th,td{white-space:nowrap} th.num{text-align:right}
+  .reason-card{background:#fff;border:1px solid #f0efe6;border-radius:14px;padding:20px 22px;box-shadow:0 2px 10px rgba(20,20,19,.05);font-size:14px}
+  .kpi-value.sm{font-size:17px;white-space:nowrap}
+  .ic-grid{display:grid;grid-template-columns:1.7fr repeat(4,1fr);gap:14px;margin-bottom:26px}
+  .ic-card{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid #ece9dd;border-radius:16px;padding:18px 18px;box-shadow:0 2px 10px rgba(20,20,19,.05)}
+  .ic{flex:none;width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+  .ic-body{min-width:0}
+  .ic-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:#6b6a5f;font-weight:700;margin-bottom:6px}
+  .ic-val{font-size:21px;font-weight:700;line-height:1.15;color:#141413;white-space:nowrap}
+  .ic-card:nth-child(2) .ic-val{color:#b40e0e}
+  .ic-sub{font-size:12px;color:#6b6a5f;margin-top:6px;line-height:1.35}
+  @media (max-width:1000px){.ic-grid{grid-template-columns:repeat(2,1fr)}.ic-card.wide{grid-column:1/-1}}
+  @media (max-width:520px){.ic-grid{grid-template-columns:1fr}.ic-val{white-space:normal}}
+
+  @page{size:A4 landscape;margin:10mm}
+  @media print{
+    html,body{width:100% !important;margin:0 !important;padding:0 !important;max-width:none !important;overflow:visible !important;zoom:1 !important}
+    body{padding:0 !important}
+    h1{font-size:24px !important;margin:0 0 4px !important}
+    .subtitle{margin:0 0 14px !important;font-size:12px !important}
+    .ic-grid{display:grid !important;grid-template-columns:1.75fr 1fr 1.15fr 1fr 1.15fr !important;gap:10px !important;margin:0 0 16px !important}
+    .ic-card,.ic-card.wide{grid-column:auto !important;display:flex !important;gap:10px !important;padding:12px 12px !important;border-radius:12px !important;align-items:flex-start !important;min-width:0 !important}
+    .ic{width:32px !important;height:32px !important;border-radius:9px !important}.ic svg{width:17px;height:17px}
+    .ic-label{font-size:8.5px !important;letter-spacing:.05em !important;white-space:nowrap !important;margin-bottom:4px !important}
+    .ic-val{font-size:16px !important;white-space:nowrap !important}
+    .ic-sub{font-size:10px !important;margin-top:4px !important;line-height:1.3 !important}
+    .table-wrap{overflow:visible !important;border-radius:10px !important;box-shadow:none !important}
+    table{min-width:0 !important;width:100% !important;font-size:11px !important}
+    th,td{padding:7px 9px !important;font-size:11px !important;white-space:nowrap !important}
+    th{font-size:9px !important}
+    .uuid{font-size:10.5px !important}
+  }
+  .badge-ok{background:#e3f4ec;color:#0b5a3b}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:26px}
+  .kc{background:#fff;border:1px solid #ece9dd;border-radius:16px;padding:16px 18px;box-shadow:0 2px 10px rgba(20,20,19,.05)}
+  .kc .l{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:#6b6a5f;font-weight:700}
+  .kc .v{font-size:28px;font-weight:700;margin-top:8px;line-height:1.1}.kc .s{font-size:12px;color:#6b6a5f;margin-top:6px}
+  .kc.r .v{color:#b40e0e}.kc.g .v{color:#0b5a3b}
+  .cl{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid #ece9dd;border-radius:14px;padding:14px 16px;margin-bottom:10px}
+  .cl .n{flex:none;width:38px;height:38px;border-radius:50%;background:#fbe9e9;color:#b40e0e;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .cl .t{font-weight:600;font-size:14px}.cl .s{font-size:12.5px;color:#6b6a5f;margin-top:3px}
+  tr.inclust td:first-child{box-shadow:inset 3px 0 0 #b40e0e}
+  td.addr{white-space:normal !important;min-width:150px;max-width:210px;font-size:12px}
+  td.rr{white-space:normal !important;min-width:200px;font-size:12px}
+  .pl{color:#6b6a5f;font-size:11px;margin-left:4px}
+  th.num{text-align:right}
+  .table-wrap table.incident-table{min-width:0;font-size:12.5px}
+  @media print{@page{size:A4 landscape;margin:10mm}body,body *{color:#000 !important}.kc,.cl,.table-wrap{box-shadow:none !important;border:1px solid #999 !important}th,td{font-size:9px !important;padding:4px 5px !important;white-space:normal !important}.badge-ok,.badge-cancel{background:#fff !important;border:1px solid #000}}
+</style>
+</head>
+<body>
+  <h1>8 PM Cancellations</h1>
+  <p class="subtitle">Enterprises Rent-a-Car, Bahrain &nbsp;•&nbsp; 6 October 2026, 20:00&ndash;20:59 &nbsp;•&nbsp; the 19-cancellation peak hour</p>
+  <div class="cards">
+    <div class="kc r"><div class="l">Cancellations</div><div class="v">19</div><div class="s">all by the rider &middot; 20:06&ndash;20:53</div></div>
+    <div class="kc g"><div class="l">Rerides (Recovered)</div><div class="v">7</div><div class="s">by 3 completed trips &middot; 0 same driver, 7 different</div></div>
+    <div class="kc r"><div class="l">Without Reride</div><div class="v">12</div><div class="s">63% of the hour's cancellations</div></div>
+    <div class="kc"><div class="l">Cash Requests</div><div class="v">8</div><div class="s">11 card or offline</div></div>
+    <div class="kc"><div class="l">Drivers Involved</div><div class="v">7</div><div class="s">most: Jamal Parambath (4)</div></div>
+  </div>
+  <h2>Repeat Pickup Addresses</h2>
+<div class="cl"><div class="n">5</div><div class="b"><div class="t">Ezel Ave, عالي، البحرين</div><div class="s">20:48&ndash;20:51 (4 min) &middot; Wahab Ashraf 3, Mohan Tharu 1, Ranjish Poyil 1 &middot; Recovered by Abishek Rajesh at 20:53</div><div class="s"></div></div></div>
+<div class="cl"><div class="n">4</div><div class="b"><div class="t">Sanad, Bahrain</div><div class="s">20:27&ndash;20:53 (26 min) &middot; Nizam Ali 2, Mohan Tharu 1, Wahab Ashraf 1 &middot; Recovered by Adnan Nabi at 21:01</div><div class="s"></div></div></div>
+<div class="cl"><div class="n">2</div><div class="b"><div class="t">143 طريق رقم 2403، المحرق 224، البحرين</div><div class="s">20:28&ndash;20:29 (47 sec) &middot; Jamal Parambath 2 &middot; No reride</div><div class="s"></div></div></div>
+
+  <h2>All 19 Cancellations</h2>
+  <p class="note">A reride is a completed trip from the same pickup address within 30 minutes of the cancellation. Rows with a red edge share a pickup address with another cancellation in the hour.</p>
+  <div class="table-wrap"><table class="incident-table"><thead><tr><th class="num">#</th><th class="num">Time</th><th>Driver</th><th>Vehicle</th><th>Pickup Address</th><th>Payment</th><th>Reride</th><th>Trip UUID</th></tr></thead><tbody>
+<tr><td class="num">1</td><td class="num">20:06:01</td><td>Nisamudheen Karuppamveettil</td><td>Audi A6 (2026) <span class="pl">687676</span></td><td class="addr">المحرق، البحرين</td><td>Cash</td><td class="rr"><span class="badge badge-cancel">No reride</span></td><td class="uuid">c45731e2-e496-40a4-a63c-d5d5506eecad</td></tr>
+<tr><td class="num">2</td><td class="num">20:08:28</td><td>Nisamudheen Karuppamveettil</td><td>Audi A6 (2026) <span class="pl">687676</span></td><td class="addr">Tariaq Bedon Esm, Bahrain</td><td>Card</td><td class="rr"><span class="badge badge-cancel">No reride</span></td><td class="uuid">0212c60a-b1cb-429d-a8f8-3f3b153ccb4c</td></tr>
+<tr><td class="num">3</td><td class="num">20:14:08</td><td>Syed Ahmed</td><td>Genesis G80 (2025) <span class="pl">255646</span></td><td class="addr">Muharraq, Bahrain</td><td>Card</td><td class="rr"><span class="badge badge-cancel">No reride</span></td><td class="uuid">2b3f4991-3790-457f-9df3-242d173c6cd0</td></tr>
+<tr><td class="num">4</td><td class="num">20:16:39</td><td>Jamal Parambath</td><td>Audi A6 (2026) <span class="pl">686787</span></td><td class="addr">(blank)</td><td>Offline</td><td class="rr"><span class="badge badge-cancel">No reride</span></td><td class="uuid">add8b186-c1a9-11f1-9d0c-3eb70f026876</td></tr>
+<tr><td class="num">5</td><td class="num">20:25:42</td><td>Nizam Ali</td><td>Genesis G80 (2025) <span class="pl">255469</span></td><td class="addr">4579 4579, Sanad, Bahrain</td><td>Card</td><td class="rr"><span class="badge badge-cancel">No reride</span></td><td class="uuid">f301e07c-b916-44d8-b29d-04eee7388a54</td></tr>
+<tr class="inclust"><td class="num">6</td><td class="num">20:27:04</td><td>Nizam Ali</td><td>Genesis G80 (2025) <span class="pl">255469</span></td><td class="addr">Sanad, Bahrain</td><td>Card</td><td class="rr"><span class="badge badge-cancel">No reride</span></td><td class="uuid">d568d6b2-9bf2-407d-80b8-deef0ef873dd</td></tr>
+<tr class="inclust"><td class="num">7</td><td class="num">20:27:46</td><td>Nizam Ali</td><td>Genesis G80 (2025) <span class="pl">255469</span></td><td class="addr">Sanad, Bahrain</td><td>Card</td><td class="rr"><span class="badge badge-cancel">No reride</span></td><td class="uuid">f6f811df-4571-4665-89b2-cb9c6c67f3c0</td></tr>
+<tr class="inclust"><td class="num">8</td><td class="num">20:28:29</td><td>Jamal Parambath</td><td>Audi A6 (2026) <span class="pl">686787</span></td><td class="addr">143 طريق رقم 2403، المحرق 224، البحرين</td><td>Card</td><td class="rr"><span class="badge badge-cancel">No reride</span></td><td class="uuid">52a2f38a-efe8-453d-b10f-70164d407366</td></tr>
+<tr class="inclust"><td class="num">9</td><td class="num">20:29:16</td><td>Jamal Parambath</td><td>Audi A6 (2026) <span class="pl">686787</span></td><td class="addr">143 طريق رقم 2403، المحرق 224، البحرين</td><td>Card</td><td class="rr"><span class="badge badge-cancel">No reride</span></td><td class="uuid">2a286a56-0ae5-463e-81c7-e24c2ea903e0</td></tr>
+<tr class="inclust"><td class="num">10</td><td class="num">20:29:35</td><td>Mohan Tharu</td><td>Audi A6 (2026) <span class="pl">505253</span></td><td class="addr">Sanad, Bahrain</td><td>Card</td><td class="rr"><span class="badge badge-cancel">No reride</span></td><td class="uuid">bb81afe5-9d29-42f2-99ea-c0fc4c43574f</td></tr>
+<tr><td class="num">11</td><td class="num">20:30:15</td><td>Nizam Ali</td><td>Genesis G80 (2025) <span class="pl">255469</span></td><td class="addr">332 Rd No 3201, Manama, Bahrain</td><td>Cash</td><td class="rr"><span class="badge badge-ok">Reride</span> Syed Ahmed at 20:32 (+2 min)</td><td class="uuid">d713a380-939c-43f4-991b-d02d976cc359</td></tr>
+<tr><td class="num">12</td><td class="num">20:41:45</td><td>Jamal Parambath</td><td>Audi A6 (2026) <span class="pl">686787</span></td><td class="addr">317 Rd No 1706, Manama, Bahrein</td><td>Card</td><td class="rr"><span class="badge badge-cancel">No reride</span></td><td class="uuid">8e1dc4d2-fde4-4ca6-9595-bf096d9d225b</td></tr>
+<tr><td class="num">13</td><td class="num">20:47:27</td><td>Mohan Tharu</td><td>Audi A6 (2026) <span class="pl">505253</span></td><td class="addr">2633, الرفاع، البحرين</td><td>Cash</td><td class="rr"><span class="badge badge-cancel">No reride</span></td><td class="uuid">d20c2453-da38-435a-a8aa-3d7574f387f1</td></tr>
+<tr class="inclust"><td class="num">14</td><td class="num">20:48:15</td><td>Mohan Tharu</td><td>Audi A6 (2026) <span class="pl">505253</span></td><td class="addr">Ezel Ave, عالي، البحرين</td><td>Cash</td><td class="rr"><span class="badge badge-ok">Reride</span> Abishek Rajesh at 20:53 (+5 min)</td><td class="uuid">bb6f74bd-dbe9-45a4-8e52-aef2265e42b6</td></tr>
+<tr class="inclust"><td class="num">15</td><td class="num">20:49:03</td><td>Ranjish Poyil</td><td>Genesis G80 (2025) <span class="pl">255490</span></td><td class="addr">Ezel Ave, عالي، البحرين</td><td>Cash</td><td class="rr"><span class="badge badge-ok">Reride</span> Abishek Rajesh at 20:53 (+4 min)</td><td class="uuid">bcf83216-f9f0-47e6-9cbf-cfe74cd5bd94</td></tr>
+<tr class="inclust"><td class="num">16</td><td class="num">20:50:15</td><td>Wahab Ashraf</td><td>Genesis G80 (2026) <span class="pl">479249</span></td><td class="addr">Ezel Ave, عالي، البحرين</td><td>Cash</td><td class="rr"><span class="badge badge-ok">Reride</span> Abishek Rajesh at 20:53 (+3 min)</td><td class="uuid">38c122f4-9cf9-409f-acd8-e4a15037431f</td></tr>
+<tr class="inclust"><td class="num">17</td><td class="num">20:51:11</td><td>Wahab Ashraf</td><td>Genesis G80 (2026) <span class="pl">479249</span></td><td class="addr">Ezel Ave, عالي، البحرين</td><td>Cash</td><td class="rr"><span class="badge badge-ok">Reride</span> Abishek Rajesh at 20:53 (+2 min)</td><td class="uuid">bf8304b1-7a7f-43a1-bbcb-a24b649ec930</td></tr>
+<tr class="inclust"><td class="num">18</td><td class="num">20:51:50</td><td>Wahab Ashraf</td><td>Genesis G80 (2026) <span class="pl">479249</span></td><td class="addr">Ezel Ave, عالي، البحرين</td><td>Cash</td><td class="rr"><span class="badge badge-ok">Reride</span> Abishek Rajesh at 20:53 (+2 min)</td><td class="uuid">05c372c2-e475-46b1-9071-238a3426ef21</td></tr>
+<tr class="inclust"><td class="num">19</td><td class="num">20:53:14</td><td>Wahab Ashraf</td><td>Genesis G80 (2026) <span class="pl">479249</span></td><td class="addr">Sanad, Bahrain</td><td>Card</td><td class="rr"><span class="badge badge-ok">Reride</span> Adnan Nabi at 21:01 (+9 min)</td><td class="uuid">b1a1e299-2245-4e4e-92cf-b80a1c809e71</td></tr>
+</tbody></table></div>
+</body>
+</html>

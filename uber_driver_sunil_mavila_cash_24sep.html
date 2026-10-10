@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cash Trips — Salim Kunju — 7, 18 & 28 September 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html { overflow-x: hidden; }
+  body {
+    font-family: "Poppins", Arial, sans-serif;
+    background: #faf9f5;
+    color: #141413;
+    padding: 48px;
+    max-width: 1280px;
+    margin: 0 auto;
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+  h1 { font-family: "Poppins", Arial, sans-serif; font-weight: 600; font-size: 30px; margin-bottom: 4px; }
+  h2 { font-family: "Poppins", Arial, sans-serif; font-weight: 600; font-size: 21px; margin-top: 48px; margin-bottom: 14px; }
+  p.subtitle { font-size: 13.5px; color: #8a8a82; margin-top: 0; margin-bottom: 30px; }
+  p.note { font-size: 12.5px; color: #888; margin-top: -6px; margin-bottom: 18px; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 16px; margin-bottom: 8px; }
+  .kpi-card { background: #fff; border-radius: 14px; padding: 18px 20px; border: 1px solid #f0efe6; box-shadow: 0 2px 10px rgba(20,20,19,0.05); }
+  .kpi-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; color: #8a8a82; font-weight: 800; margin-bottom: 8px; }
+  .kpi-value { font-family: "Poppins", Arial, sans-serif; font-weight: 800; font-size: 26px; }
+  .kpi-value.green { color: #007a4d; }
+  .kpi-value.red { color: #b40e0e; }
+  .cols { display: flex; gap: 20px; flex-wrap: wrap; }
+  .cols > div { flex: 1; min-width: 300px; }
+  .chart-card { background: #fff; border-radius: 14px; box-shadow: 0 2px 10px rgba(20,20,19,0.06); border: 1px solid #f0efe6; padding: 24px 26px 16px; }
+  .chart-title { font-size: 11px; color: #8a8a82; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 20px; font-weight: 600; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .chart-title .peak { color: #141413; font-weight: 600; text-transform: none; letter-spacing: 0; font-size: 13.5px; font-family: "Poppins", Arial, sans-serif; }
+  .chart-bars { display: flex; align-items: flex-end; gap: 4px; height: 150px; padding-bottom: 10px; position: relative; background-image: repeating-linear-gradient(to top, #eeece1 0, #eeece1 1px, transparent 1px, transparent 25%); background-size: 100% 100%; }
+  .chart-bar-wrap { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; position: relative; }
+  .chart-bar { width: 100%; max-width: 20px; border-radius: 5px 5px 2px 2px; min-height: 3px; position: relative; box-shadow: inset 0 -6px 8px -4px rgba(0,0,0,0.12); }
+  .chart-bar.completed-bar { background: linear-gradient(180deg, #17b378 0%, #007a4d 100%); }
+  .chart-bar.cancelled-bar { background: linear-gradient(180deg, #ef5a5a 0%, #b40e0e 100%); }
+  .chart-bar.peak { box-shadow: 0 0 0 2px #faf9f5, 0 0 0 3.5px #141413, inset 0 -6px 8px -4px rgba(0,0,0,0.15); }
+  .chart-bar-count { font-size: 10px; font-weight: 600; color: #141413; margin-bottom: 5px; font-variant-numeric: tabular-nums; }
+  .chart-bar-count.peak-count-completed { color: #007a4d; }
+  .chart-bar-count.peak-count-cancelled { color: #b40e0e; }
+  .chart-labels { display: flex; gap: 4px; margin-top: 8px; }
+  .chart-label { flex: 1; min-width: 0; text-align: center; font-size: 9.5px; font-weight: 600; color: #9a988c; white-space: nowrap; overflow: visible; letter-spacing: 0.01em; }
+  table { border-collapse: collapse; width: 100%; background: #fff; border-radius: 12px; overflow: hidden; font-size: 13px; }
+  .table-wrap { background: #fff; border-radius: 14px; border: 1px solid #f0efe6; box-shadow: 0 2px 10px rgba(20,20,19,0.05); overflow-x: auto; }
+  .table-wrap table { min-width: 480px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid #f0efe6; }
+  th { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em; color: #8a8a82; font-weight: 600; background: #fbfaf6; }
+  tr:last-child td { border-bottom: none; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .day-badge { display: inline-block; background: #f3f1e8; color: #6b6a5f; font-size: 10.5px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; }
+
+  .alert-card { background: #fff7f0; border: 1px solid #f3d9b8; border-radius: 14px; padding: 20px 22px; margin-bottom: 20px; }
+  .alert-title { font-weight: 600; font-size: 14px; color: #a35a1a; margin-bottom: 8px; }
+  .alert-text { font-size: 13.5px; color: #4a3a2a; }
+  .incident-table { font-size: 12.5px; }
+  .incident-table th, .incident-table td { padding: 9px 10px; }
+  .same-addr { color: #b45309; font-weight: 600; }
+  .badge { display: inline-block; font-size: 10.5px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+  .badge-cancel { background: #fbe9e9; color: #b40e0e; }
+  .table-wrap table.incident-table { min-width: 620px; }
+
+  @page { size: A4; margin: 12mm; }
+  @media print {
+    body { zoom: 0.75; }
+    .table-wrap table { min-width: 0 !important; }
+    .cols th, .cols td { padding: 6px 8px !important; font-size: 11px !important; }
+  }
+
+  @media (max-width: 720px) {
+    body { padding: 24px 16px; }
+    h1 { font-size: 21px; }
+    h2 { font-size: 16px; margin-top: 34px; margin-bottom: 10px; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .kpi-card { padding: 14px 14px; }
+    .kpi-value { font-size: 20px; }
+    .cols { gap: 14px; overflow-x: hidden; }
+    .cols > div { min-width: 0 !important; }
+    .chart-card { padding: 16px 14px 10px; max-width: 100%; overflow-x: hidden; }
+    .chart-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; max-width: 100%; }
+    .chart-bars, .chart-labels { min-width: 620px; height: 110px; }
+    .chart-labels { height: auto; }
+    .chart-bar-count { font-size: 8px; }
+    .chart-label { font-size: 8px; }
+  }
+  .uuid{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;color:#141413;white-space:nowrap}
+  th,td{white-space:nowrap} th.num{text-align:right}
+  .reason-card{background:#fff;border:1px solid #f0efe6;border-radius:14px;padding:20px 22px;box-shadow:0 2px 10px rgba(20,20,19,.05);font-size:14px}
+  .kpi-value.sm{font-size:17px;white-space:nowrap}
+  .ic-grid{display:grid;grid-template-columns:1.7fr repeat(4,1fr);gap:14px;margin-bottom:26px}
+  .ic-card{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid #ece9dd;border-radius:16px;padding:18px 18px;box-shadow:0 2px 10px rgba(20,20,19,.05)}
+  .ic{flex:none;width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+  .ic-body{min-width:0}
+  .ic-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:#6b6a5f;font-weight:700;margin-bottom:6px}
+  .ic-val{font-size:21px;font-weight:700;line-height:1.15;color:#141413;white-space:nowrap}
+  .ic-card:nth-child(2) .ic-val{color:#b40e0e}
+  .ic-sub{font-size:12px;color:#6b6a5f;margin-top:6px;line-height:1.35}
+  @media (max-width:1000px){.ic-grid{grid-template-columns:repeat(2,1fr)}.ic-card.wide{grid-column:1/-1}}
+  @media (max-width:520px){.ic-grid{grid-template-columns:1fr}.ic-val{white-space:normal}}
+
+  @page{size:A4 landscape;margin:10mm}
+  @media print{
+    html,body{width:100% !important;margin:0 !important;padding:0 !important;max-width:none !important;overflow:visible !important;zoom:1 !important}
+    body{padding:0 !important}
+    h1{font-size:24px !important;margin:0 0 4px !important}
+    .subtitle{margin:0 0 14px !important;font-size:12px !important}
+    .ic-grid{display:grid !important;grid-template-columns:1.75fr 1fr 1.15fr 1fr 1.15fr !important;gap:10px !important;margin:0 0 16px !important}
+    .ic-card,.ic-card.wide{grid-column:auto !important;display:flex !important;gap:10px !important;padding:12px 12px !important;border-radius:12px !important;align-items:flex-start !important;min-width:0 !important}
+    .ic{width:32px !important;height:32px !important;border-radius:9px !important}.ic svg{width:17px;height:17px}
+    .ic-label{font-size:8.5px !important;letter-spacing:.05em !important;white-space:nowrap !important;margin-bottom:4px !important}
+    .ic-val{font-size:16px !important;white-space:nowrap !important}
+    .ic-sub{font-size:10px !important;margin-top:4px !important;line-height:1.3 !important}
+    .table-wrap{overflow:visible !important;border-radius:10px !important;box-shadow:none !important}
+    table{min-width:0 !important;width:100% !important;font-size:11px !important}
+    th,td{padding:7px 9px !important;font-size:11px !important;white-space:nowrap !important}
+    th{font-size:9px !important}
+    .uuid{font-size:10.5px !important}
+  }
+  .ic-card:nth-child(2) .ic-val{color:#141413}
+  .badge-cash{background:#e3f4ec;color:#0b5a3b}.badge-card{background:#e4ecfb;color:#1d3f8f}
+  td.addr{white-space:normal !important;min-width:190px;max-width:250px;font-size:12px;line-height:1.35}
+  .two{display:grid;grid-template-columns:1fr 1.4fr;gap:20px;align-items:start;margin-bottom:8px}
+  @media (max-width:800px){.two{grid-template-columns:1fr}}
+  @media print{.two{grid-template-columns:1fr 1.4fr !important}td.addr{max-width:none}.badge-cash,.badge-card{background:#fff !important;border:1px solid #000}th,td{font-size:9.5px !important;padding:5px 6px !important;white-space:normal !important}}
+  .pl{color:#6b6a5f;font-size:11px;margin-left:4px}
+  td.addr{min-width:160px !important;max-width:230px !important}
+  .uuid{font-size:11px}
+  .hero{display:grid;grid-template-columns:1.5fr repeat(3,1fr);gap:16px;margin-bottom:34px}
+  .hc{background:#fff;border:1px solid #ece9dd;border-radius:18px;padding:20px 22px;box-shadow:0 2px 12px rgba(20,20,19,.05);position:relative;overflow:hidden}
+  .hc::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--ac,#141413)}
+  .hc .l{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:#6b6a5f;font-weight:700;display:flex;align-items:center;gap:8px}
+  .hc .l i{width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;background:var(--bg,#eceae0);color:var(--ac,#141413)}
+  .hc .v{font-size:32px;font-weight:700;line-height:1.1;margin-top:12px;color:#141413;white-space:nowrap}
+  .hc .v small{font-size:15px;font-weight:600;color:#6b6a5f;margin-left:4px}
+  .hc .s{font-size:12.5px;color:#6b6a5f;margin-top:8px}
+  .hc.id .v{font-size:26px;display:flex;align-items:center}
+  .av{display:inline-flex;flex:none;width:44px;height:44px;border-radius:50%;background:#141413;color:#fff;font-weight:700;align-items:center;justify-content:center;font-size:16px;margin-right:12px}
+  .daysec{margin-top:28px}
+  .daysec table{table-layout:fixed;width:100%;min-width:900px}
+  .daysec th:nth-child(1){width:3%}.daysec th:nth-child(2){width:15%}.daysec th:nth-child(3){width:8%}.daysec th:nth-child(4){width:21%}.daysec th:nth-child(5){width:21%}.daysec th:nth-child(6){width:8%}.daysec th:nth-child(7){width:24%}
+  .daysec .uuid{white-space:nowrap}
+  .dayhead{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin:0 0 12px}
+  .dayhead h2{margin:0;font-size:19px}
+  .dayhead .wk{color:#6b6a5f;font-weight:500;font-size:14px;margin-left:8px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{background:#fff;border:1px solid #ece9dd;border-radius:20px;padding:5px 12px;font-size:12px;color:#141413}
+  .chip b{font-weight:700}.chip.g{background:#e3f4ec;border-color:#cfe9dc}
+  @media (max-width:900px){.hero{grid-template-columns:1fr 1fr}}
+  @media (max-width:520px){.hero{grid-template-columns:1fr}.hc .v{white-space:normal}}
+  @media print{@page{size:A4 landscape;margin:10mm}body{zoom:1 !important;padding:0 !important;max-width:none !important}body,body *{color:#000 !important}.hc,.chip,.table-wrap{box-shadow:none !important;border:1px solid #999 !important}.hc::before{background:#000}.hero{grid-template-columns:1.5fr repeat(3,1fr) !important}.daysec{break-inside:avoid}.av{background:#fff !important;border:1px solid #000}th,td{font-size:9.5px !important;padding:5px 6px !important;white-space:normal !important}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  .pl{color:#6b6a5f;font-size:11px;margin-left:4px}
+  td.addr{min-width:160px !important;max-width:230px !important}
+  .uuid{font-size:11px}
+  .hero{display:grid;grid-template-columns:1.5fr repeat(3,1fr);gap:16px;margin-bottom:34px}
+  .hc{background:#fff;border:1px solid #ece9dd;border-radius:18px;padding:20px 22px;box-shadow:0 2px 12px rgba(20,20,19,.05);position:relative;overflow:hidden}
+  .hc::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--ac,#141413)}
+  .hc .l{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:#6b6a5f;font-weight:700;display:flex;align-items:center;gap:8px}
+  .hc .l i{width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;background:var(--bg,#eceae0);color:var(--ac,#141413)}
+  .hc .v{font-size:32px;font-weight:700;line-height:1.1;margin-top:12px;color:#141413;white-space:nowrap}
+  .hc .v small{font-size:15px;font-weight:600;color:#6b6a5f;margin-left:4px}
+  .hc .s{font-size:12.5px;color:#6b6a5f;margin-top:8px}
+  .hc.id .v{font-size:26px;display:flex;align-items:center}
+  .av{display:inline-flex;flex:none;width:44px;height:44px;border-radius:50%;background:#141413;color:#fff;font-weight:700;align-items:center;justify-content:center;font-size:16px;margin-right:12px}
+  .daysec{margin-top:28px}
+  .daysec table.cn{table-layout:auto}.daysec table.cn th{width:auto !important}
+  .daysec table{table-layout:fixed;width:100%;min-width:900px}
+  .daysec th:nth-child(1){width:3%}.daysec th:nth-child(2){width:15%}.daysec th:nth-child(3){width:8%}.daysec th:nth-child(4){width:21%}.daysec th:nth-child(5){width:21%}.daysec th:nth-child(6){width:8%}.daysec th:nth-child(7){width:24%}
+  .daysec .uuid{white-space:nowrap}
+  .dayhead{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin:0 0 12px}
+  .dayhead h2{margin:0;font-size:19px}
+  .dayhead .wk{color:#6b6a5f;font-weight:500;font-size:14px;margin-left:8px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{background:#fff;border:1px solid #ece9dd;border-radius:20px;padding:5px 12px;font-size:12px;color:#141413}
+  .chip b{font-weight:700}.chip.g{background:#e3f4ec;border-color:#cfe9dc}
+  @media (max-width:900px){.hero{grid-template-columns:1fr 1fr}}
+  @media (max-width:520px){.hero{grid-template-columns:1fr}.hc .v{white-space:normal}}
+  @media print{@page{size:A4 landscape;margin:10mm}body{zoom:1 !important;padding:0 !important;max-width:none !important}body,body *{color:#000 !important}.hc,.chip,.table-wrap{box-shadow:none !important;border:1px solid #999 !important}.hc::before{background:#000}.hero{grid-template-columns:1.5fr repeat(3,1fr) !important}.daysec{break-inside:avoid}.av{background:#fff !important;border:1px solid #000}th,td{font-size:9.5px !important;padding:5px 6px !important;white-space:normal !important}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+  <h1>Cash Trips &mdash; Sunil Mavila</h1>
+  <p class="subtitle">Enterprises Rent-a-Car, Bahrain &nbsp;•&nbsp; 24 September 4:00 AM &ndash; 25 September 4:00 AM 2026</p>
+  <div class="hero">
+    <div class="hc id" style="--ac:#141413"><div><div class="l">Driver</div><div class="v" style="margin-top:14px"><span class="av">SM</span>Sunil Mavila</div><div class="s">24 Sep 2026 &middot; 1 day</div></div></div>
+    <div class="hc" style="--ac:#0b8a5a;--bg:#e3f4ec"><div class="l"><i><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg></i>Cash Trips</div><div class="v">1</div><div class="s">of 16 trips that day</div></div>
+    <div class="hc" style="--ac:#c98a00;--bg:#fdf1d8"><div class="l"><i><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20L10 4l4 10 7 6"/></svg></i>Distance</div><div class="v">2.9<small>km</small></div><div class="s">avg 2.9 km per trip</div></div>
+    <div class="hc" style="--ac:#2d5fd0;--bg:#e4ecfb"><div class="l"><i><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></i>Driving Time</div><div class="v">26 min</div><div class="s">avg 26 min per trip</div></div>
+  </div>
+  <section class="daysec">
+    <div class="dayhead"><h2>24 September 2026<span class="wk">Thursday</span></h2><div class="chips"><span class="chip g"><b>1</b> cash trip</span><span class="chip"><b>2.9</b> km</span><span class="chip"><b>26 min</b> driving</span><span class="chip">Hyundai Staria (2024) (532100)</span></div></div>
+    <div class="table-wrap"><table class="incident-table"><thead><tr><th class="num">#</th><th class="num">Requested &rarr; Dropped</th><th class="num">Duration</th><th>Pickup</th><th>Drop-off</th><th class="num">Distance</th><th>Trip UUID</th></tr></thead><tbody>
+<tr><td class="num">1</td><td class="num">25 Sep 02:20 &rarr; 02:47</td><td class="num">26 min</td><td class="addr">المنامة، البحرين</td><td class="addr">Bridge View, Rd No 2411، المنامة، البحرين</td><td class="num">2.89 km</td><td class="uuid">8dfdc1eb-1369-48cc-a88b-326bda4ac320</td></tr>
+</tbody></table></div>
+  </section>
+  <section class="daysec"><div class="dayhead"><h2>Cash Requests Cancelled by the Rider<span class="wk">not completed</span></h2><div class="chips"><span class="chip"><b>1</b> cancelled</span></div></div>
+    <div class="table-wrap"><table class="incident-table cn"><thead><tr><th class="num">#</th><th class="num">Time</th><th>Vehicle</th><th>Pickup</th><th>Trip UUID</th></tr></thead><tbody>
+<tr><td class="num">1</td><td class="num">23:14:39</td><td>Hyundai Staria (2024) <span class="pl">532100</span></td><td class="addr">Road 4606, Building 555, Block 346, Bahrain Bay, المنامة، Bahrain</td><td class="uuid">be2a3df0-cce4-4656-a918-6efad76a0e2e</td></tr>
+</tbody></table></div></section>
+</body>
+</html>

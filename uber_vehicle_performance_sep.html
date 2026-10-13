@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vehicle Performance — September 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html { overflow-x: hidden; }
+  body {
+    font-family: "Poppins", Arial, sans-serif;
+    background: #faf9f5;
+    color: #141413;
+    padding: 48px;
+    max-width: 1280px;
+    margin: 0 auto;
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+  h1 { font-family: "Poppins", Arial, sans-serif; font-weight: 600; font-size: 30px; margin-bottom: 4px; }
+  h2 { font-family: "Poppins", Arial, sans-serif; font-weight: 600; font-size: 21px; margin-top: 48px; margin-bottom: 14px; }
+  p.subtitle { font-size: 13.5px; color: #8a8a82; margin-top: 0; margin-bottom: 30px; }
+  p.note { font-size: 12.5px; color: #888; margin-top: -6px; margin-bottom: 18px; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 16px; margin-bottom: 8px; }
+  .kpi-card { background: #fff; border-radius: 14px; padding: 18px 20px; border: 1px solid #f0efe6; box-shadow: 0 2px 10px rgba(20,20,19,0.05); }
+  .kpi-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; color: #8a8a82; font-weight: 800; margin-bottom: 8px; }
+  .kpi-value { font-family: "Poppins", Arial, sans-serif; font-weight: 800; font-size: 26px; }
+  .kpi-value.green { color: #007a4d; }
+  .kpi-value.red { color: #b40e0e; }
+  .cols { display: flex; gap: 20px; flex-wrap: wrap; }
+  .cols > div { flex: 1; min-width: 300px; }
+  .chart-card { background: #fff; border-radius: 14px; box-shadow: 0 2px 10px rgba(20,20,19,0.06); border: 1px solid #f0efe6; padding: 24px 26px 16px; }
+  .chart-title { font-size: 11px; color: #8a8a82; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 20px; font-weight: 600; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .chart-title .peak { color: #141413; font-weight: 600; text-transform: none; letter-spacing: 0; font-size: 13.5px; font-family: "Poppins", Arial, sans-serif; }
+  .chart-bars { display: flex; align-items: flex-end; gap: 4px; height: 150px; padding-bottom: 10px; position: relative; background-image: repeating-linear-gradient(to top, #eeece1 0, #eeece1 1px, transparent 1px, transparent 25%); background-size: 100% 100%; }
+  .chart-bar-wrap { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; position: relative; }
+  .chart-bar { width: 100%; max-width: 20px; border-radius: 5px 5px 2px 2px; min-height: 3px; position: relative; box-shadow: inset 0 -6px 8px -4px rgba(0,0,0,0.12); }
+  .chart-bar.completed-bar { background: linear-gradient(180deg, #17b378 0%, #007a4d 100%); }
+  .chart-bar.cancelled-bar { background: linear-gradient(180deg, #ef5a5a 0%, #b40e0e 100%); }
+  .chart-bar.peak { box-shadow: 0 0 0 2px #faf9f5, 0 0 0 3.5px #141413, inset 0 -6px 8px -4px rgba(0,0,0,0.15); }
+  .chart-bar-count { font-size: 10px; font-weight: 600; color: #141413; margin-bottom: 5px; font-variant-numeric: tabular-nums; }
+  .chart-bar-count.peak-count-completed { color: #007a4d; }
+  .chart-bar-count.peak-count-cancelled { color: #b40e0e; }
+  .chart-labels { display: flex; gap: 4px; margin-top: 8px; }
+  .chart-label { flex: 1; min-width: 0; text-align: center; font-size: 9.5px; font-weight: 600; color: #9a988c; white-space: nowrap; overflow: visible; letter-spacing: 0.01em; }
+  table { border-collapse: collapse; width: 100%; background: #fff; border-radius: 12px; overflow: hidden; font-size: 13px; }
+  .table-wrap { background: #fff; border-radius: 14px; border: 1px solid #f0efe6; box-shadow: 0 2px 10px rgba(20,20,19,0.05); overflow-x: auto; }
+  .table-wrap table { min-width: 480px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid #f0efe6; }
+  th { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em; color: #8a8a82; font-weight: 600; background: #fbfaf6; }
+  tr:last-child td { border-bottom: none; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .day-badge { display: inline-block; background: #f3f1e8; color: #6b6a5f; font-size: 10.5px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; }
+
+  .alert-card { background: #fff7f0; border: 1px solid #f3d9b8; border-radius: 14px; padding: 20px 22px; margin-bottom: 20px; }
+  .alert-title { font-weight: 600; font-size: 14px; color: #a35a1a; margin-bottom: 8px; }
+  .alert-text { font-size: 13.5px; color: #4a3a2a; }
+  .incident-table { font-size: 12.5px; }
+  .incident-table th, .incident-table td { padding: 9px 10px; }
+  .same-addr { color: #b45309; font-weight: 600; }
+  .badge { display: inline-block; font-size: 10.5px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+  .badge-cancel { background: #fbe9e9; color: #b40e0e; }
+  .table-wrap table.incident-table { min-width: 620px; }
+
+  @page { size: A4; margin: 12mm; }
+  @media print {
+    body { zoom: 0.75; }
+    .table-wrap table { min-width: 0 !important; }
+    .cols th, .cols td { padding: 6px 8px !important; font-size: 11px !important; }
+  }
+
+  @media (max-width: 720px) {
+    body { padding: 24px 16px; }
+    h1 { font-size: 21px; }
+    h2 { font-size: 16px; margin-top: 34px; margin-bottom: 10px; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .kpi-card { padding: 14px 14px; }
+    .kpi-value { font-size: 20px; }
+    .cols { gap: 14px; overflow-x: hidden; }
+    .cols > div { min-width: 0 !important; }
+    .chart-card { padding: 16px 14px 10px; max-width: 100%; overflow-x: hidden; }
+    .chart-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; max-width: 100%; }
+    .chart-bars, .chart-labels { min-width: 620px; height: 110px; }
+    .chart-labels { height: auto; }
+    .chart-bar-count { font-size: 8px; }
+    .chart-label { font-size: 8px; }
+  }
+  .uuid{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;color:#141413;white-space:nowrap}
+  th,td{white-space:nowrap} th.num{text-align:right}
+  .reason-card{background:#fff;border:1px solid #f0efe6;border-radius:14px;padding:20px 22px;box-shadow:0 2px 10px rgba(20,20,19,.05);font-size:14px}
+  .kpi-value.sm{font-size:17px;white-space:nowrap}
+  .ic-grid{display:grid;grid-template-columns:1.7fr repeat(4,1fr);gap:14px;margin-bottom:26px}
+  .ic-card{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid #ece9dd;border-radius:16px;padding:18px 18px;box-shadow:0 2px 10px rgba(20,20,19,.05)}
+  .ic{flex:none;width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+  .ic-body{min-width:0}
+  .ic-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:#6b6a5f;font-weight:700;margin-bottom:6px}
+  .ic-val{font-size:21px;font-weight:700;line-height:1.15;color:#141413;white-space:nowrap}
+  .ic-card:nth-child(2) .ic-val{color:#b40e0e}
+  .ic-sub{font-size:12px;color:#6b6a5f;margin-top:6px;line-height:1.35}
+  @media (max-width:1000px){.ic-grid{grid-template-columns:repeat(2,1fr)}.ic-card.wide{grid-column:1/-1}}
+  @media (max-width:520px){.ic-grid{grid-template-columns:1fr}.ic-val{white-space:normal}}
+
+  @page{size:A4 landscape;margin:10mm}
+  @media print{
+    html,body{width:100% !important;margin:0 !important;padding:0 !important;max-width:none !important;overflow:visible !important;zoom:1 !important}
+    body{padding:0 !important}
+    h1{font-size:24px !important;margin:0 0 4px !important}
+    .subtitle{margin:0 0 14px !important;font-size:12px !important}
+    .ic-grid{display:grid !important;grid-template-columns:1.75fr 1fr 1.15fr 1fr 1.15fr !important;gap:10px !important;margin:0 0 16px !important}
+    .ic-card,.ic-card.wide{grid-column:auto !important;display:flex !important;gap:10px !important;padding:12px 12px !important;border-radius:12px !important;align-items:flex-start !important;min-width:0 !important}
+    .ic{width:32px !important;height:32px !important;border-radius:9px !important}.ic svg{width:17px;height:17px}
+    .ic-label{font-size:8.5px !important;letter-spacing:.05em !important;white-space:nowrap !important;margin-bottom:4px !important}
+    .ic-val{font-size:16px !important;white-space:nowrap !important}
+    .ic-sub{font-size:10px !important;margin-top:4px !important;line-height:1.3 !important}
+    .table-wrap{overflow:visible !important;border-radius:10px !important;box-shadow:none !important}
+    table{min-width:0 !important;width:100% !important;font-size:11px !important}
+    th,td{padding:7px 9px !important;font-size:11px !important;white-space:nowrap !important}
+    th{font-size:9px !important}
+    .uuid{font-size:10.5px !important}
+  }
+  .ic-card:nth-child(2) .ic-val{color:#141413}
+  .badge-cash{background:#e3f4ec;color:#0b5a3b}.badge-card{background:#e4ecfb;color:#1d3f8f}
+  td.addr{white-space:normal !important;min-width:190px;max-width:250px;font-size:12px;line-height:1.35}
+  .two{display:grid;grid-template-columns:1fr 1.4fr;gap:20px;align-items:start;margin-bottom:8px}
+  @media (max-width:800px){.two{grid-template-columns:1fr}}
+  @media print{.two{grid-template-columns:1fr 1.4fr !important}td.addr{max-width:none}.badge-cash,.badge-card{background:#fff !important;border:1px solid #000}th,td{font-size:9.5px !important;padding:5px 6px !important;white-space:normal !important}}
+  .pl{color:#6b6a5f;font-size:11px;margin-left:4px}
+  td.addr{min-width:160px !important;max-width:230px !important}
+  .uuid{font-size:11px}
+  .hero{display:grid;grid-template-columns:1.5fr repeat(3,1fr);gap:16px;margin-bottom:34px}
+  .hc{background:#fff;border:1px solid #ece9dd;border-radius:18px;padding:20px 22px;box-shadow:0 2px 12px rgba(20,20,19,.05);position:relative;overflow:hidden}
+  .hc::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--ac,#141413)}
+  .hc .l{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:#6b6a5f;font-weight:700;display:flex;align-items:center;gap:8px}
+  .hc .l i{width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;background:var(--bg,#eceae0);color:var(--ac,#141413)}
+  .hc .v{font-size:32px;font-weight:700;line-height:1.1;margin-top:12px;color:#141413;white-space:nowrap}
+  .hc .v small{font-size:15px;font-weight:600;color:#6b6a5f;margin-left:4px}
+  .hc .s{font-size:12.5px;color:#6b6a5f;margin-top:8px}
+  .hc.id .v{font-size:26px;display:flex;align-items:center}
+  .av{display:inline-flex;flex:none;width:44px;height:44px;border-radius:50%;background:#141413;color:#fff;font-weight:700;align-items:center;justify-content:center;font-size:16px;margin-right:12px}
+  .daysec{margin-top:28px}
+  .daysec table{table-layout:fixed;width:100%;min-width:900px}
+  .daysec th:nth-child(1){width:3%}.daysec th:nth-child(2){width:15%}.daysec th:nth-child(3){width:8%}.daysec th:nth-child(4){width:21%}.daysec th:nth-child(5){width:21%}.daysec th:nth-child(6){width:8%}.daysec th:nth-child(7){width:24%}
+  .daysec .uuid{white-space:nowrap}
+  .dayhead{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin:0 0 12px}
+  .dayhead h2{margin:0;font-size:19px}
+  .dayhead .wk{color:#6b6a5f;font-weight:500;font-size:14px;margin-left:8px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{background:#fff;border:1px solid #ece9dd;border-radius:20px;padding:5px 12px;font-size:12px;color:#141413}
+  .chip b{font-weight:700}.chip.g{background:#e3f4ec;border-color:#cfe9dc}
+  @media (max-width:900px){.hero{grid-template-columns:1fr 1fr}}
+  @media (max-width:520px){.hero{grid-template-columns:1fr}.hc .v{white-space:normal}}
+  @media print{@page{size:A4 landscape;margin:10mm}body{zoom:1 !important;padding:0 !important;max-width:none !important}body,body *{color:#000 !important}.hc,.chip,.table-wrap{box-shadow:none !important;border:1px solid #999 !important}.hc::before{background:#000}.hero{grid-template-columns:1.5fr repeat(3,1fr) !important}.daysec{break-inside:avoid}.av{background:#fff !important;border:1px solid #000}th,td{font-size:9.5px !important;padding:5px 6px !important;white-space:normal !important}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  .pl{color:#6b6a5f;font-size:11px;margin-left:4px}
+  td.addr{min-width:160px !important;max-width:230px !important}
+  .uuid{font-size:11px}
+  .hero{display:grid;grid-template-columns:1.5fr repeat(2,1fr);gap:16px;margin-bottom:34px}
+  .hc{background:#fff;border:1px solid #ece9dd;border-radius:18px;padding:20px 22px;box-shadow:0 2px 12px rgba(20,20,19,.05);position:relative;overflow:hidden}
+  .hc::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--ac,#141413)}
+  .hc .l{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:#6b6a5f;font-weight:700;display:flex;align-items:center;gap:8px}
+  .hc .l i{width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;background:var(--bg,#eceae0);color:var(--ac,#141413)}
+  .hc .v{font-size:32px;font-weight:700;line-height:1.1;margin-top:12px;color:#141413;white-space:nowrap}
+  .hc .v small{font-size:15px;font-weight:600;color:#6b6a5f;margin-left:4px}
+  .hc .s{font-size:12.5px;color:#6b6a5f;margin-top:8px}
+  .hc.id .v{font-size:26px;display:flex;align-items:center}
+  .av{display:inline-flex;flex:none;width:44px;height:44px;border-radius:50%;background:#141413;color:#fff;font-weight:700;align-items:center;justify-content:center;font-size:16px;margin-right:12px}
+  .daysec{margin-top:28px}
+  .daysec table.all{table-layout:fixed;min-width:0 !important;font-size:11.5px}.daysec table.all th:nth-child(n){width:auto !important}
+  .daysec table.all th:nth-child(1){width:3% !important}.daysec table.all th:nth-child(2){width:11% !important}.daysec table.all th:nth-child(3){width:6% !important}.daysec table.all th:nth-child(4){width:14% !important}.daysec table.all th:nth-child(5){width:14% !important}.daysec table.all th:nth-child(6){width:10% !important}.daysec table.all th:nth-child(7){width:12% !important}.daysec table.all th:nth-child(8){width:7% !important}.daysec table.all th:nth-child(9){width:7% !important}.daysec table.all th:nth-child(10){width:16% !important}
+  .daysec table.all td.uuid{white-space:normal !important;word-break:break-all;font-size:9.5px;min-width:0}
+  .daysec table.all th,.daysec table.all td{white-space:normal !important;padding:8px 6px !important}
+  .daysec table.cn{table-layout:auto}.daysec table.cn th{width:auto !important}
+  .daysec table{table-layout:fixed;width:100%;min-width:900px}
+  .daysec th:nth-child(1){width:3%}.daysec th:nth-child(2){width:15%}.daysec th:nth-child(3){width:8%}.daysec th:nth-child(4){width:21%}.daysec th:nth-child(5){width:21%}.daysec th:nth-child(6){width:8%}.daysec th:nth-child(7){width:24%}
+  .daysec .uuid{white-space:nowrap}
+  .dayhead{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin:0 0 12px}
+  .dayhead h2{margin:0;font-size:19px}
+  .dayhead .wk{color:#6b6a5f;font-weight:500;font-size:14px;margin-left:8px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{background:#fff;border:1px solid #ece9dd;border-radius:20px;padding:5px 12px;font-size:12px;color:#141413}
+  .chip b{font-weight:700}.chip.g{background:#e3f4ec;border-color:#cfe9dc}
+  @media (max-width:900px){.hero{grid-template-columns:1fr 1fr}}
+  @media (max-width:520px){.hero{grid-template-columns:1fr}.hc .v{white-space:normal}}
+  @media print{@page{size:A4 landscape;margin:10mm}body{zoom:1 !important;padding:0 !important;max-width:none !important}body,body *{color:#000 !important}.hc,.chip,.table-wrap{box-shadow:none !important;border:1px solid #999 !important}.hc::before{background:#000}.hero{grid-template-columns:1.5fr repeat(2,1fr) !important}.daysec{break-inside:avoid}.av{background:#fff !important;border:1px solid #000}th,td{font-size:9.5px !important;padding:5px 6px !important;white-space:normal !important}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  .pl2{font-variant-numeric:tabular-nums;font-weight:600}
+  .vt{table-layout:fixed;width:100%;min-width:0 !important;font-size:12px}
+  .vt th,.vt td{white-space:normal !important;padding:8px 6px !important}
+  .vt th{font-size:9.5px}
+  .vt th:nth-child(1){width:3%}.vt th:nth-child(2){width:15%}.vt th:nth-child(3){width:7%}.vt th:nth-child(4){width:6%}.vt th:nth-child(5){width:7%}.vt th:nth-child(6){width:6%}.vt th:nth-child(7){width:8%}.vt th:nth-child(8){width:6%}.vt th:nth-child(9){width:7%}.vt th:nth-child(10){width:7%}.vt th:nth-child(11){width:7%}.vt th:nth-child(12){width:6%}.vt th:nth-child(13){width:7%}.vt th:nth-child(14){width:8%}
+  .hero.six{grid-template-columns:repeat(6,1fr)}
+  .hero.six .hc .v{font-size:24px}.hero.six .hc{padding:16px 16px}
+  .br{display:grid;grid-template-columns:230px 1fr 170px;gap:12px;align-items:center;padding:5px 0}
+  .bl{font-size:12.5px}.bl span{color:#6b6a5f;font-size:11.5px}
+  .bt{background:#eceae0;border-radius:4px;height:12px}.bf{background:#0b8a5a;height:12px;border-radius:4px}
+  .bn{font-size:12px;color:#141413;text-align:right;font-variant-numeric:tabular-nums}
+  .chartbox{background:#fff;border:1px solid #ece9dd;border-radius:16px;padding:16px 22px;box-shadow:0 2px 10px rgba(20,20,19,.05)}
+  @media (max-width:900px){.hero.six{grid-template-columns:repeat(2,1fr)}.br{grid-template-columns:1fr}.bn{text-align:left}}
+  @media print{@page{size:A4 landscape;margin:10mm}.hero.six{grid-template-columns:repeat(6,1fr) !important}.vt th,.vt td{font-size:8.5px !important;padding:4px 3px !important}.br{break-inside:avoid}}
+</style>
+</head>
+<body>
+  <h1>Vehicle Performance</h1>
+  <p class="subtitle">Enterprises Rent-a-Car, Bahrain &nbsp;•&nbsp; 1 September &ndash; 30 September 2026</p>
+  <div class="hero six"><div class="hc" style="--ac:#141413;--bg:#eceae0"><div class="l"><i><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16V11l2-5h10l2 5v5M3 16h18M7 19v-3M17 19v-3"/></svg></i>Vehicles</div><div class="v">31</div><div class="s">active of 32 listed</div></div><div class="hc" style="--ac:#0b8a5a;--bg:#e3f4ec"><div class="l"><i><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16V11l2-5h10l2 5v5M3 16h18M7 19v-3M17 19v-3"/></svg></i>Trips</div><div class="v">4,372</div><div class="s">avg 141 per vehicle</div></div><div class="hc" style="--ac:#c98a00;--bg:#fdf1d8"><div class="l"><i><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20L10 4l4 10 7 6"/></svg></i>Distance</div><div class="v">47,735<small>km</small></div><div class="s">avg 10.6 km per trip</div></div><div class="hc" style="--ac:#2d5fd0;--bg:#e4ecfb"><div class="l"><i><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg></i>Earnings</div><div class="v">22,754</div><div class="s">734 per vehicle</div></div><div class="hc" style="--ac:#0b8a5a;--bg:#e3f4ec"><div class="l"><i><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg></i>Cash Collected</div><div class="v">4,641</div><div class="s">20% of earnings</div></div><div class="hc" style="--ac:#2d5fd0;--bg:#e4ecfb"><div class="l"><i><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></i>Hours Online</div><div class="v">7,492</div><div class="s">17% on a trip</div></div></div>
+  <h2>Trips by Vehicle</h2>
+  <div class="chartbox">
+<div class="br"><div class="bl"><b>513600</b> <span>2026 Mercedes-Benz E-Class</span></div><div class="bt"><div class="bf" style="width:100.0%"></div></div><div class="bn">228 trips &middot; 2,429 km</div></div>
+<div class="br"><div class="bl"><b>255636</b> <span>2025 Genesis G80</span></div><div class="bt"><div class="bf" style="width:99.1%"></div></div><div class="bn">226 trips &middot; 2,151 km</div></div>
+<div class="br"><div class="bl"><b>255490</b> <span>2025 Genesis G80</span></div><div class="bt"><div class="bf" style="width:95.6%"></div></div><div class="bn">218 trips &middot; 2,399 km</div></div>
+<div class="br"><div class="bl"><b>479266</b> <span>2026 Genesis G80</span></div><div class="bt"><div class="bf" style="width:90.4%"></div></div><div class="bn">206 trips &middot; 2,210 km</div></div>
+<div class="br"><div class="bl"><b>255646</b> <span>2025 Genesis G80</span></div><div class="bt"><div class="bf" style="width:88.2%"></div></div><div class="bn">201 trips &middot; 2,109 km</div></div>
+<div class="br"><div class="bl"><b>255469</b> <span>2025 Genesis G80</span></div><div class="bt"><div class="bf" style="width:86.4%"></div></div><div class="bn">197 trips &middot; 2,335 km</div></div>
+<div class="br"><div class="bl"><b>255605</b> <span>2025 Genesis G80</span></div><div class="bt"><div class="bf" style="width:84.2%"></div></div><div class="bn">192 trips &middot; 2,149 km</div></div>
+<div class="br"><div class="bl"><b>686787</b> <span>2026 Audi A6</span></div><div class="bt"><div class="bf" style="width:83.8%"></div></div><div class="bn">191 trips &middot; 1,995 km</div></div>
+<div class="br"><div class="bl"><b>313623</b> <span>2024 Lexus ES</span></div><div class="bt"><div class="bf" style="width:83.3%"></div></div><div class="bn">190 trips &middot; 1,822 km</div></div>
+<div class="br"><div class="bl"><b>479249</b> <span>2026 Genesis G80</span></div><div class="bt"><div class="bf" style="width:78.9%"></div></div><div class="bn">180 trips &middot; 1,882 km</div></div>
+<div class="br"><div class="bl"><b>255730</b> <span>2025 Genesis G80</span></div><div class="bt"><div class="bf" style="width:78.9%"></div></div><div class="bn">180 trips &middot; 1,940 km</div></div>
+<div class="br"><div class="bl"><b>687676</b> <span>2026 Audi A6</span></div><div class="bt"><div class="bf" style="width:78.1%"></div></div><div class="bn">178 trips &middot; 1,938 km</div></div>
+<div class="br"><div class="bl"><b>89800</b> <span>2022 Mercedes-Benz E 200</span></div><div class="bt"><div class="bf" style="width:77.2%"></div></div><div class="bn">176 trips &middot; 1,916 km</div></div>
+<div class="br"><div class="bl"><b>532100</b> <span>2024 Hyundai Staria</span></div><div class="bt"><div class="bf" style="width:75.4%"></div></div><div class="bn">172 trips &middot; 1,984 km</div></div>
+<div class="br"><div class="bl"><b>255684</b> <span>2025 Genesis G80</span></div><div class="bt"><div class="bf" style="width:74.1%"></div></div><div class="bn">169 trips &middot; 1,855 km</div></div>
+<div class="br"><div class="bl"><b>472405</b> <span>2025 BMW 5-series</span></div><div class="bt"><div class="bf" style="width:71.5%"></div></div><div class="bn">163 trips &middot; 1,984 km</div></div>
+<div class="br"><div class="bl"><b>472201</b> <span>2025 BMW 5-series</span></div><div class="bt"><div class="bf" style="width:66.7%"></div></div><div class="bn">152 trips &middot; 1,632 km</div></div>
+<div class="br"><div class="bl"><b>188100</b> <span>2025 Toyota Land Cruiser</span></div><div class="bt"><div class="bf" style="width:61.4%"></div></div><div class="bn">140 trips &middot; 1,638 km</div></div>
+<div class="br"><div class="bl"><b>692890</b> <span>2025 Hyundai Staria</span></div><div class="bt"><div class="bf" style="width:59.6%"></div></div><div class="bn">136 trips &middot; 1,581 km</div></div>
+<div class="br"><div class="bl"><b>505253</b> <span>2026 Audi A6</span></div><div class="bt"><div class="bf" style="width:57.9%"></div></div><div class="bn">132 trips &middot; 1,514 km</div></div>
+<div class="br"><div class="bl"><b>87800</b> <span>2022 Mercedes-Benz E-Class</span></div><div class="bt"><div class="bf" style="width:53.1%"></div></div><div class="bn">121 trips &middot; 1,244 km</div></div>
+<div class="br"><div class="bl"><b>568400</b> <span>2026 Mercedes-Benz E-Class</span></div><div class="bt"><div class="bf" style="width:52.2%"></div></div><div class="bn">119 trips &middot; 1,136 km</div></div>
+<div class="br"><div class="bl"><b>567200</b> <span>2024 Hyundai Staria</span></div><div class="bt"><div class="bf" style="width:52.2%"></div></div><div class="bn">119 trips &middot; 1,327 km</div></div>
+<div class="br"><div class="bl"><b>692894</b> <span>2025 Hyundai Staria</span></div><div class="bt"><div class="bf" style="width:49.1%"></div></div><div class="bn">112 trips &middot; 1,347 km</div></div>
+<div class="br"><div class="bl"><b>126800</b> <span>2024 Hyundai Staria</span></div><div class="bt"><div class="bf" style="width:34.2%"></div></div><div class="bn">78 trips &middot; 890 km</div></div>
+<div class="br"><div class="bl"><b>687886</b> <span>2025 Ford Expedition</span></div><div class="bt"><div class="bf" style="width:29.8%"></div></div><div class="bn">68 trips &middot; 718 km</div></div>
+<div class="br"><div class="bl"><b>25444</b> <span>2022 Mercedes-Benz S-Class</span></div><div class="bt"><div class="bf" style="width:23.7%"></div></div><div class="bn">54 trips &middot; 679 km</div></div>
+<div class="br"><div class="bl"><b>124645</b> <span>2025 Nissan Patrol</span></div><div class="bt"><div class="bf" style="width:15.4%"></div></div><div class="bn">35 trips &middot; 428 km</div></div>
+<div class="br"><div class="bl"><b>301444</b> <span>2025 Nissan Patrol</span></div><div class="bt"><div class="bf" style="width:6.6%"></div></div><div class="bn">15 trips &middot; 166 km</div></div>
+<div class="br"><div class="bl"><b>607774</b> <span>2024 BMW 7-series</span></div><div class="bt"><div class="bf" style="width:6.1%"></div></div><div class="bn">14 trips &middot; 281 km</div></div>
+<div class="br"><div class="bl"><b>167727</b> <span>2025 Nissan Patrol</span></div><div class="bt"><div class="bf" style="width:4.4%"></div></div><div class="bn">10 trips &middot; 56 km</div></div>
+  </div>
+  <h2>Vehicle Details</h2>
+  <div class="table-wrap"><table class="vt"><thead><tr><th class="num">#</th><th>Vehicle</th><th>Plate</th><th class="num">Trips</th><th class="num">KM</th><th class="num">Avg KM / Trip</th><th class="num">Earnings</th><th class="num">Earn / Hr</th><th class="num">Cash Collected</th><th class="num">Hours Online</th><th class="num">Hours on Trip</th><th class="num">Trips / Hr</th><th class="num">Accept Rate</th><th class="num">Cancel Rate</th></tr></thead><tbody>
+<tr><td class="num">1</td><td>2026 Mercedes-Benz E-Class</td><td class="pl2">513600</td><td class="num"><b>228</b></td><td class="num">2,429</td><td class="num">10.5</td><td class="num">1,190</td><td class="num">3.33</td><td class="num">211</td><td class="num">358</td><td class="num">66</td><td class="num">0.64</td><td class="num">97%</td><td class="num">0%</td></tr>
+<tr><td class="num">2</td><td>2025 Genesis G80</td><td class="pl2">255636</td><td class="num"><b>226</b></td><td class="num">2,151</td><td class="num">9.3</td><td class="num">1,084</td><td class="num">3.35</td><td class="num">262</td><td class="num">324</td><td class="num">60</td><td class="num">0.70</td><td class="num">95%</td><td class="num">1%</td></tr>
+<tr><td class="num">3</td><td>2025 Genesis G80</td><td class="pl2">255490</td><td class="num"><b>218</b></td><td class="num">2,399</td><td class="num">10.7</td><td class="num">1,158</td><td class="num">3.36</td><td class="num">291</td><td class="num">344</td><td class="num">67</td><td class="num">0.63</td><td class="num">97%</td><td class="num">0%</td></tr>
+<tr><td class="num">4</td><td>2026 Genesis G80</td><td class="pl2">479266</td><td class="num"><b>206</b></td><td class="num">2,210</td><td class="num">10.4</td><td class="num">1,088</td><td class="num">3.36</td><td class="num">237</td><td class="num">324</td><td class="num">59</td><td class="num">0.64</td><td class="num">97%</td><td class="num">0%</td></tr>
+<tr><td class="num">5</td><td>2025 Genesis G80</td><td class="pl2">255646</td><td class="num"><b>201</b></td><td class="num">2,109</td><td class="num">10.2</td><td class="num">1,013</td><td class="num">3.10</td><td class="num">157</td><td class="num">327</td><td class="num">58</td><td class="num">0.61</td><td class="num">97%</td><td class="num">1%</td></tr>
+<tr><td class="num">6</td><td>2025 Genesis G80</td><td class="pl2">255469</td><td class="num"><b>197</b></td><td class="num">2,335</td><td class="num">11.7</td><td class="num">1,095</td><td class="num">3.51</td><td class="num">196</td><td class="num">312</td><td class="num">62</td><td class="num">0.63</td><td class="num">97%</td><td class="num">0%</td></tr>
+<tr><td class="num">7</td><td>2025 Genesis G80</td><td class="pl2">255605</td><td class="num"><b>192</b></td><td class="num">2,149</td><td class="num">10.8</td><td class="num">1,031</td><td class="num">2.99</td><td class="num">229</td><td class="num">345</td><td class="num">60</td><td class="num">0.56</td><td class="num">98%</td><td class="num">1%</td></tr>
+<tr><td class="num">8</td><td>2026 Audi A6</td><td class="pl2">686787</td><td class="num"><b>191</b></td><td class="num">1,995</td><td class="num">10.2</td><td class="num">954</td><td class="num">3.26</td><td class="num">328</td><td class="num">293</td><td class="num">59</td><td class="num">0.65</td><td class="num">100%</td><td class="num">0%</td></tr>
+<tr><td class="num">9</td><td>2024 Lexus ES</td><td class="pl2">313623</td><td class="num"><b>190</b></td><td class="num">1,822</td><td class="num">9.6</td><td class="num">950</td><td class="num">3.00</td><td class="num">170</td><td class="num">316</td><td class="num">54</td><td class="num">0.60</td><td class="num">98%</td><td class="num">0%</td></tr>
+<tr><td class="num">10</td><td>2026 Genesis G80</td><td class="pl2">479249</td><td class="num"><b>180</b></td><td class="num">1,882</td><td class="num">10.1</td><td class="num">907</td><td class="num">2.90</td><td class="num">136</td><td class="num">312</td><td class="num">52</td><td class="num">0.58</td><td class="num">98%</td><td class="num">0%</td></tr>
+<tr><td class="num">11</td><td>2025 Genesis G80</td><td class="pl2">255730</td><td class="num"><b>180</b></td><td class="num">1,940</td><td class="num">10.8</td><td class="num">950</td><td class="num">3.19</td><td class="num">248</td><td class="num">298</td><td class="num">55</td><td class="num">0.60</td><td class="num">93%</td><td class="num">1%</td></tr>
+<tr><td class="num">12</td><td>2026 Audi A6</td><td class="pl2">687676</td><td class="num"><b>178</b></td><td class="num">1,938</td><td class="num">10.5</td><td class="num">921</td><td class="num">3.07</td><td class="num">102</td><td class="num">300</td><td class="num">50</td><td class="num">0.59</td><td class="num">97%</td><td class="num">0%</td></tr>
+<tr><td class="num">13</td><td>2022 Mercedes-Benz E 200</td><td class="pl2">89800</td><td class="num"><b>176</b></td><td class="num">1,916</td><td class="num">10.6</td><td class="num">916</td><td class="num">3.08</td><td class="num">168</td><td class="num">297</td><td class="num">49</td><td class="num">0.59</td><td class="num">99%</td><td class="num">0%</td></tr>
+<tr><td class="num">14</td><td>2024 Hyundai Staria</td><td class="pl2">532100</td><td class="num"><b>172</b></td><td class="num">1,984</td><td class="num">10.9</td><td class="num">897</td><td class="num">3.19</td><td class="num">156</td><td class="num">281</td><td class="num">52</td><td class="num">0.61</td><td class="num">97%</td><td class="num">0%</td></tr>
+<tr><td class="num">15</td><td>2025 Genesis G80</td><td class="pl2">255684</td><td class="num"><b>169</b></td><td class="num">1,855</td><td class="num">10.0</td><td class="num">855</td><td class="num">3.19</td><td class="num">201</td><td class="num">268</td><td class="num">51</td><td class="num">0.63</td><td class="num">98%</td><td class="num">1%</td></tr>
+<tr><td class="num">16</td><td>2025 BMW 5-series</td><td class="pl2">472405</td><td class="num"><b>163</b></td><td class="num">1,984</td><td class="num">11.5</td><td class="num">884</td><td class="num">3.60</td><td class="num">154</td><td class="num">245</td><td class="num">52</td><td class="num">0.66</td><td class="num">96%</td><td class="num">0%</td></tr>
+<tr><td class="num">17</td><td>2025 BMW 5-series</td><td class="pl2">472201</td><td class="num"><b>152</b></td><td class="num">1,632</td><td class="num">10.5</td><td class="num">802</td><td class="num">2.30</td><td class="num">128</td><td class="num">348</td><td class="num">48</td><td class="num">0.44</td><td class="num">87%</td><td class="num">0%</td></tr>
+<tr><td class="num">18</td><td>2025 Toyota Land Cruiser</td><td class="pl2">188100</td><td class="num"><b>140</b></td><td class="num">1,638</td><td class="num">11.7</td><td class="num">769</td><td class="num">2.93</td><td class="num">169</td><td class="num">263</td><td class="num">46</td><td class="num">0.53</td><td class="num">98%</td><td class="num">1%</td></tr>
+<tr><td class="num">19</td><td>2025 Hyundai Staria</td><td class="pl2">692890</td><td class="num"><b>136</b></td><td class="num">1,581</td><td class="num">11.6</td><td class="num">742</td><td class="num">2.79</td><td class="num">199</td><td class="num">266</td><td class="num">45</td><td class="num">0.51</td><td class="num">97%</td><td class="num">0%</td></tr>
+<tr><td class="num">20</td><td>2026 Audi A6</td><td class="pl2">505253</td><td class="num"><b>132</b></td><td class="num">1,514</td><td class="num">10.8</td><td class="num">694</td><td class="num">3.02</td><td class="num">80</td><td class="num">230</td><td class="num">41</td><td class="num">0.57</td><td class="num">96%</td><td class="num">0%</td></tr>
+<tr><td class="num">21</td><td>2022 Mercedes-Benz E-Class</td><td class="pl2">87800</td><td class="num"><b>121</b></td><td class="num">1,244</td><td class="num">9.8</td><td class="num">591</td><td class="num">2.29</td><td class="num">175</td><td class="num">258</td><td class="num">36</td><td class="num">0.47</td><td class="num">92%</td><td class="num">1%</td></tr>
+<tr><td class="num">22</td><td>2026 Mercedes-Benz E-Class</td><td class="pl2">568400</td><td class="num"><b>119</b></td><td class="num">1,136</td><td class="num">8.9</td><td class="num">562</td><td class="num">3.34</td><td class="num">92</td><td class="num">168</td><td class="num">30</td><td class="num">0.71</td><td class="num">95%</td><td class="num">0%</td></tr>
+<tr><td class="num">23</td><td>2024 Hyundai Staria</td><td class="pl2">567200</td><td class="num"><b>119</b></td><td class="num">1,327</td><td class="num">10.4</td><td class="num">599</td><td class="num">2.88</td><td class="num">142</td><td class="num">208</td><td class="num">35</td><td class="num">0.57</td><td class="num">98%</td><td class="num">1%</td></tr>
+<tr><td class="num">24</td><td>2025 Hyundai Staria</td><td class="pl2">692894</td><td class="num"><b>112</b></td><td class="num">1,347</td><td class="num">11.1</td><td class="num">610</td><td class="num">2.83</td><td class="num">117</td><td class="num">215</td><td class="num">37</td><td class="num">0.52</td><td class="num">91%</td><td class="num">0%</td></tr>
+<tr><td class="num">25</td><td>2024 Hyundai Staria</td><td class="pl2">126800</td><td class="num"><b>78</b></td><td class="num">890</td><td class="num">10.2</td><td class="num">404</td><td class="num">2.85</td><td class="num">62</td><td class="num">142</td><td class="num">24</td><td class="num">0.55</td><td class="num">93%</td><td class="num">0%</td></tr>
+<tr><td class="num">26</td><td>2025 Ford Expedition</td><td class="pl2">687886</td><td class="num"><b>68</b></td><td class="num">718</td><td class="num">10.6</td><td class="num">366</td><td class="num">2.66</td><td class="num">46</td><td class="num">138</td><td class="num">20</td><td class="num">0.49</td><td class="num">89%</td><td class="num">0%</td></tr>
+<tr><td class="num">27</td><td>2022 Mercedes-Benz S-Class</td><td class="pl2">25444</td><td class="num"><b>54</b></td><td class="num">679</td><td class="num">12.6</td><td class="num">302</td><td class="num">3.01</td><td class="num">97</td><td class="num">100</td><td class="num">18</td><td class="num">0.54</td><td class="num">93%</td><td class="num">0%</td></tr>
+<tr><td class="num">28</td><td>2025 Nissan Patrol</td><td class="pl2">124645</td><td class="num"><b>35</b></td><td class="num">428</td><td class="num">12.2</td><td class="num">198</td><td class="num">2.45</td><td class="num">15</td><td class="num">81</td><td class="num">11</td><td class="num">0.43</td><td class="num">98%</td><td class="num">0%</td></tr>
+<tr><td class="num">29</td><td>2025 Nissan Patrol</td><td class="pl2">301444</td><td class="num"><b>15</b></td><td class="num">166</td><td class="num">11.0</td><td class="num">79</td><td class="num">1.87</td><td class="num">16</td><td class="num">42</td><td class="num">5</td><td class="num">0.35</td><td class="num">94%</td><td class="num">0%</td></tr>
+<tr><td class="num">30</td><td>2024 BMW 7-series</td><td class="pl2">607774</td><td class="num"><b>14</b></td><td class="num">281</td><td class="num">20.0</td><td class="num">106</td><td class="num">1.41</td><td class="num">49</td><td class="num">75</td><td class="num">6</td><td class="num">0.19</td><td class="num">100%</td><td class="num">0%</td></tr>
+<tr><td class="num">31</td><td>2025 Nissan Patrol</td><td class="pl2">167727</td><td class="num"><b>10</b></td><td class="num">56</td><td class="num">5.6</td><td class="num">39</td><td class="num">3.08</td><td class="num">10</td><td class="num">13</td><td class="num">3</td><td class="num">0.79</td><td class="num">88%</td><td class="num">0%</td></tr>
+<tr class="tot-row"><td></td><td>Total</td><td></td><td class="num">4,372</td><td class="num">47,735</td><td class="num">10.6</td><td class="num">22,754</td><td class="num"></td><td class="num">4,641</td><td class="num">7,492</td><td class="num">1,310</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+  </tbody></table></div>
+  <p class="note" style="margin-top:12px">Trips, earnings, cash, hours, acceptance and cancellation rate come from the vehicle performance file. KM is the sum of completed-trip distances from the trip activity files for 1&ndash;30 Sep (the vehicle file has no distance), so its trip count differs slightly from the Trips column. Vehicle 21197 (Hyundai Sonata) had no trips and is not listed.</p>
+</body>
+</html>

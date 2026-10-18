@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vehicle Performance — 17 October 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html { overflow-x: hidden; }
+  body {
+    font-family: "Poppins", Arial, sans-serif;
+    background: #faf9f5;
+    color: #141413;
+    padding: 48px;
+    max-width: 1280px;
+    margin: 0 auto;
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+  h1 { font-family: "Poppins", Arial, sans-serif; font-weight: 600; font-size: 30px; margin-bottom: 4px; }
+  h2 { font-family: "Poppins", Arial, sans-serif; font-weight: 600; font-size: 21px; margin-top: 48px; margin-bottom: 14px; }
+  p.subtitle { font-size: 13.5px; color: #8a8a82; margin-top: 0; margin-bottom: 30px; }
+  p.note { font-size: 12.5px; color: #888; margin-top: -6px; margin-bottom: 18px; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 16px; margin-bottom: 8px; }
+  .kpi-card { background: #fff; border-radius: 14px; padding: 18px 20px; border: 1px solid #f0efe6; box-shadow: 0 2px 10px rgba(20,20,19,0.05); }
+  .kpi-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; color: #8a8a82; font-weight: 800; margin-bottom: 8px; }
+  .kpi-value { font-family: "Poppins", Arial, sans-serif; font-weight: 800; font-size: 26px; }
+  .kpi-value.green { color: #007a4d; }
+  .kpi-value.red { color: #b40e0e; }
+  .cols { display: flex; gap: 20px; flex-wrap: wrap; }
+  .cols > div { flex: 1; min-width: 300px; }
+  .chart-card { background: #fff; border-radius: 14px; box-shadow: 0 2px 10px rgba(20,20,19,0.06); border: 1px solid #f0efe6; padding: 24px 26px 16px; }
+  .chart-title { font-size: 11px; color: #8a8a82; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 20px; font-weight: 600; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .chart-title .peak { color: #141413; font-weight: 600; text-transform: none; letter-spacing: 0; font-size: 13.5px; font-family: "Poppins", Arial, sans-serif; }
+  .chart-bars { display: flex; align-items: flex-end; gap: 4px; height: 150px; padding-bottom: 10px; position: relative; background-image: repeating-linear-gradient(to top, #eeece1 0, #eeece1 1px, transparent 1px, transparent 25%); background-size: 100% 100%; }
+  .chart-bar-wrap { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; position: relative; }
+  .chart-bar { width: 100%; max-width: 20px; border-radius: 5px 5px 2px 2px; min-height: 3px; position: relative; box-shadow: inset 0 -6px 8px -4px rgba(0,0,0,0.12); }
+  .chart-bar.completed-bar { background: linear-gradient(180deg, #17b378 0%, #007a4d 100%); }
+  .chart-bar.cancelled-bar { background: linear-gradient(180deg, #ef5a5a 0%, #b40e0e 100%); }
+  .chart-bar.peak { box-shadow: 0 0 0 2px #faf9f5, 0 0 0 3.5px #141413, inset 0 -6px 8px -4px rgba(0,0,0,0.15); }
+  .chart-bar-count { font-size: 10px; font-weight: 600; color: #141413; margin-bottom: 5px; font-variant-numeric: tabular-nums; }
+  .chart-bar-count.peak-count-completed { color: #007a4d; }
+  .chart-bar-count.peak-count-cancelled { color: #b40e0e; }
+  .chart-labels { display: flex; gap: 4px; margin-top: 8px; }
+  .chart-label { flex: 1; min-width: 0; text-align: center; font-size: 9.5px; font-weight: 600; color: #9a988c; white-space: nowrap; overflow: visible; letter-spacing: 0.01em; }
+  table { border-collapse: collapse; width: 100%; background: #fff; border-radius: 12px; overflow: hidden; font-size: 13px; }
+  .table-wrap { background: #fff; border-radius: 14px; border: 1px solid #f0efe6; box-shadow: 0 2px 10px rgba(20,20,19,0.05); overflow-x: auto; }
+  .table-wrap table { min-width: 480px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid #f0efe6; }
+  th { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em; color: #8a8a82; font-weight: 600; background: #fbfaf6; }
+  tr:last-child td { border-bottom: none; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .day-badge { display: inline-block; background: #f3f1e8; color: #6b6a5f; font-size: 10.5px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; }
+
+  .alert-card { background: #fff7f0; border: 1px solid #f3d9b8; border-radius: 14px; padding: 20px 22px; margin-bottom: 20px; }
+  .alert-title { font-weight: 600; font-size: 14px; color: #a35a1a; margin-bottom: 8px; }
+  .alert-text { font-size: 13.5px; color: #4a3a2a; }
+  .incident-table { font-size: 12.5px; }
+  .incident-table th, .incident-table td { padding: 9px 10px; }
+  .same-addr { color: #b45309; font-weight: 600; }
+  .badge { display: inline-block; font-size: 10.5px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+  .badge-cancel { background: #fbe9e9; color: #b40e0e; }
+  .table-wrap table.incident-table { min-width: 620px; }
+
+  @page { size: A4; margin: 12mm; }
+  @media print {
+    body { zoom: 0.75; }
+    .table-wrap table { min-width: 0 !important; }
+    .cols th, .cols td { padding: 6px 8px !important; font-size: 11px !important; }
+  }
+
+  @media (max-width: 720px) {
+    body { padding: 24px 16px; }
+    h1 { font-size: 21px; }
+    h2 { font-size: 16px; margin-top: 34px; margin-bottom: 10px; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .kpi-card { padding: 14px 14px; }
+    .kpi-value { font-size: 20px; }
+    .cols { gap: 14px; overflow-x: hidden; }
+    .cols > div { min-width: 0 !important; }
+    .chart-card { padding: 16px 14px 10px; max-width: 100%; overflow-x: hidden; }
+    .chart-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; max-width: 100%; }
+    .chart-bars, .chart-labels { min-width: 620px; height: 110px; }
+    .chart-labels { height: auto; }
+    .chart-bar-count { font-size: 8px; }
+    .chart-label { font-size: 8px; }
+  }
+  .uuid{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;color:#141413;white-space:nowrap}
+  th,td{white-space:nowrap} th.num{text-align:right}
+  .reason-card{background:#fff;border:1px solid #f0efe6;border-radius:14px;padding:20px 22px;box-shadow:0 2px 10px rgba(20,20,19,.05);font-size:14px}
+  .kpi-value.sm{font-size:17px;white-space:nowrap}
+  .ic-grid{display:grid;grid-template-columns:1.7fr repeat(4,1fr);gap:14px;margin-bottom:26px}
+  .ic-card{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid #ece9dd;border-radius:16px;padding:18px 18px;box-shadow:0 2px 10px rgba(20,20,19,.05)}
+  .ic{flex:none;width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+  .ic-body{min-width:0}
+  .ic-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:#6b6a5f;font-weight:700;margin-bottom:6px}
+  .ic-val{font-size:21px;font-weight:700;line-height:1.15;color:#141413;white-space:nowrap}
+  .ic-card:nth-child(2) .ic-val{color:#b40e0e}
+  .ic-sub{font-size:12px;color:#6b6a5f;margin-top:6px;line-height:1.35}
+  @media (max-width:1000px){.ic-grid{grid-template-columns:repeat(2,1fr)}.ic-card.wide{grid-column:1/-1}}
+  @media (max-width:520px){.ic-grid{grid-template-columns:1fr}.ic-val{white-space:normal}}
+
+  @page{size:A4 landscape;margin:10mm}
+  @media print{
+    html,body{width:100% !important;margin:0 !important;padding:0 !important;max-width:none !important;overflow:visible !important;zoom:1 !important}
+    body{padding:0 !important}
+    h1{font-size:24px !important;margin:0 0 4px !important}
+    .subtitle{margin:0 0 14px !important;font-size:12px !important}
+    .ic-grid{display:grid !important;grid-template-columns:1.75fr 1fr 1.15fr 1fr 1.15fr !important;gap:10px !important;margin:0 0 16px !important}
+    .ic-card,.ic-card.wide{grid-column:auto !important;display:flex !important;gap:10px !important;padding:12px 12px !important;border-radius:12px !important;align-items:flex-start !important;min-width:0 !important}
+    .ic{width:32px !important;height:32px !important;border-radius:9px !important}.ic svg{width:17px;height:17px}
+    .ic-label{font-size:8.5px !important;letter-spacing:.05em !important;white-space:nowrap !important;margin-bottom:4px !important}
+    .ic-val{font-size:16px !important;white-space:nowrap !important}
+    .ic-sub{font-size:10px !important;margin-top:4px !important;line-height:1.3 !important}
+    .table-wrap{overflow:visible !important;border-radius:10px !important;box-shadow:none !important}
+    table{min-width:0 !important;width:100% !important;font-size:11px !important}
+    th,td{padding:7px 9px !important;font-size:11px !important;white-space:nowrap !important}
+    th{font-size:9px !important}
+    .uuid{font-size:10.5px !important}
+  }
+  .ic-card:nth-child(2) .ic-val{color:#141413}
+  .badge-cash{background:#e3f4ec;color:#0b5a3b}.badge-card{background:#e4ecfb;color:#1d3f8f}
+  td.addr{white-space:normal !important;min-width:190px;max-width:250px;font-size:12px;line-height:1.35}
+  .two{display:grid;grid-template-columns:1fr 1.4fr;gap:20px;align-items:start;margin-bottom:8px}
+  @media (max-width:800px){.two{grid-template-columns:1fr}}
+  @media print{.two{grid-template-columns:1fr 1.4fr !important}td.addr{max-width:none}.badge-cash,.badge-card{background:#fff !important;border:1px solid #000}th,td{font-size:9.5px !important;padding:5px 6px !important;white-space:normal !important}}
+  .pl{color:#6b6a5f;font-size:11px;margin-left:4px}
+  td.addr{min-width:160px !important;max-width:230px !important}
+  .uuid{font-size:11px}
+  .hero{display:grid;grid-template-columns:1.5fr repeat(3,1fr);gap:16px;margin-bottom:34px}
+  .hc{background:#fff;border:1px solid #ece9dd;border-radius:18px;padding:20px 22px;box-shadow:0 2px 12px rgba(20,20,19,.05);position:relative;overflow:hidden}
+  .hc::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--ac,#141413)}
+  .hc .l{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:#6b6a5f;font-weight:700;display:flex;align-items:center;gap:8px}
+  .hc .l i{width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;background:var(--bg,#eceae0);color:var(--ac,#141413)}
+  .hc .v{font-size:32px;font-weight:700;line-height:1.1;margin-top:12px;color:#141413;white-space:nowrap}
+  .hc .v small{font-size:15px;font-weight:600;color:#6b6a5f;margin-left:4px}
+  .hc .s{font-size:12.5px;color:#6b6a5f;margin-top:8px}
+  .hc.id .v{font-size:26px;display:flex;align-items:center}
+  .av{display:inline-flex;flex:none;width:44px;height:44px;border-radius:50%;background:#141413;color:#fff;font-weight:700;align-items:center;justify-content:center;font-size:16px;margin-right:12px}
+  .daysec{margin-top:28px}
+  .daysec table{table-layout:fixed;width:100%;min-width:900px}
+  .daysec th:nth-child(1){width:3%}.daysec th:nth-child(2){width:15%}.daysec th:nth-child(3){width:8%}.daysec th:nth-child(4){width:21%}.daysec th:nth-child(5){width:21%}.daysec th:nth-child(6){width:8%}.daysec th:nth-child(7){width:24%}
+  .daysec .uuid{white-space:nowrap}
+  .dayhead{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin:0 0 12px}
+  .dayhead h2{margin:0;font-size:19px}
+  .dayhead .wk{color:#6b6a5f;font-weight:500;font-size:14px;margin-left:8px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{background:#fff;border:1px solid #ece9dd;border-radius:20px;padding:5px 12px;font-size:12px;color:#141413}
+  .chip b{font-weight:700}.chip.g{background:#e3f4ec;border-color:#cfe9dc}
+  @media (max-width:900px){.hero{grid-template-columns:1fr 1fr}}
+  @media (max-width:520px){.hero{grid-template-columns:1fr}.hc .v{white-space:normal}}
+  @media print{@page{size:A4 landscape;margin:10mm}body{zoom:1 !important;padding:0 !important;max-width:none !important}body,body *{color:#000 !important}.hc,.chip,.table-wrap{box-shadow:none !important;border:1px solid #999 !important}.hc::before{background:#000}.hero{grid-template-columns:1.5fr repeat(3,1fr) !important}.daysec{break-inside:avoid}.av{background:#fff !important;border:1px solid #000}th,td{font-size:9.5px !important;padding:5px 6px !important;white-space:normal !important}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  .pl{color:#6b6a5f;font-size:11px;margin-left:4px}
+  td.addr{min-width:160px !important;max-width:230px !important}
+  .uuid{font-size:11px}
+  .hero{display:grid;grid-template-columns:1.5fr repeat(2,1fr);gap:16px;margin-bottom:34px}
+  .hc{background:#fff;border:1px solid #ece9dd;border-radius:18px;padding:20px 22px;box-shadow:0 2px 12px rgba(20,20,19,.05);position:relative;overflow:hidden}
+  .hc::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--ac,#141413)}
+  .hc .l{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:#6b6a5f;font-weight:700;display:flex;align-items:center;gap:8px}
+  .hc .l i{width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;background:var(--bg,#eceae0);color:var(--ac,#141413)}
+  .hc .v{font-size:32px;font-weight:700;line-height:1.1;margin-top:12px;color:#141413;white-space:nowrap}
+  .hc .v small{font-size:15px;font-weight:600;color:#6b6a5f;margin-left:4px}
+  .hc .s{font-size:12.5px;color:#6b6a5f;margin-top:8px}
+  .hc.id .v{font-size:26px;display:flex;align-items:center}
+  .av{display:inline-flex;flex:none;width:44px;height:44px;border-radius:50%;background:#141413;color:#fff;font-weight:700;align-items:center;justify-content:center;font-size:16px;margin-right:12px}
+  .daysec{margin-top:28px}
+  .daysec table.all{table-layout:fixed;min-width:0 !important;font-size:11.5px}.daysec table.all th:nth-child(n){width:auto !important}
+  .daysec table.all th:nth-child(1){width:3% !important}.daysec table.all th:nth-child(2){width:11% !important}.daysec table.all th:nth-child(3){width:6% !important}.daysec table.all th:nth-child(4){width:14% !important}.daysec table.all th:nth-child(5){width:14% !important}.daysec table.all th:nth-child(6){width:10% !important}.daysec table.all th:nth-child(7){width:12% !important}.daysec table.all th:nth-child(8){width:7% !important}.daysec table.all th:nth-child(9){width:7% !important}.daysec table.all th:nth-child(10){width:16% !important}
+  .daysec table.all td.uuid{white-space:normal !important;word-break:break-all;font-size:9.5px;min-width:0}
+  .daysec table.all th,.daysec table.all td{white-space:normal !important;padding:8px 6px !important}
+  .daysec table.cn{table-layout:auto}.daysec table.cn th{width:auto !important}
+  .daysec table{table-layout:fixed;width:100%;min-width:900px}
+  .daysec th:nth-child(1){width:3%}.daysec th:nth-child(2){width:15%}.daysec th:nth-child(3){width:8%}.daysec th:nth-child(4){width:21%}.daysec th:nth-child(5){width:21%}.daysec th:nth-child(6){width:8%}.daysec th:nth-child(7){width:24%}
+  .daysec .uuid{white-space:nowrap}
+  .dayhead{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin:0 0 12px}
+  .dayhead h2{margin:0;font-size:19px}
+  .dayhead .wk{color:#6b6a5f;font-weight:500;font-size:14px;margin-left:8px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{background:#fff;border:1px solid #ece9dd;border-radius:20px;padding:5px 12px;font-size:12px;color:#141413}
+  .chip b{font-weight:700}.chip.g{background:#e3f4ec;border-color:#cfe9dc}
+  @media (max-width:900px){.hero{grid-template-columns:1fr 1fr}}
+  @media (max-width:520px){.hero{grid-template-columns:1fr}.hc .v{white-space:normal}}
+  @media print{@page{size:A4 landscape;margin:10mm}body{zoom:1 !important;padding:0 !important;max-width:none !important}body,body *{color:#000 !important}.hc,.chip,.table-wrap{box-shadow:none !important;border:1px solid #999 !important}.hc::before{background:#000}.hero{grid-template-columns:1.5fr repeat(2,1fr) !important}.daysec{break-inside:avoid}.av{background:#fff !important;border:1px solid #000}th,td{font-size:9.5px !important;padding:5px 6px !important;white-space:normal !important}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  .pl2{font-variant-numeric:tabular-nums;font-weight:600}
+  .vt{table-layout:fixed;width:100%;min-width:0 !important;font-size:12px}
+  .vt th,.vt td{white-space:normal !important;padding:8px 6px !important}
+  .vt th{font-size:9.5px}
+  .vt th:nth-child(1){width:3%}.vt th:nth-child(2){width:15%}.vt th:nth-child(3){width:7%}.vt th:nth-child(4){width:6%}.vt th:nth-child(5){width:7%}.vt th:nth-child(6){width:6%}.vt th:nth-child(7){width:8%}.vt th:nth-child(8){width:6%}.vt th:nth-child(9){width:7%}.vt th:nth-child(10){width:7%}.vt th:nth-child(11){width:7%}.vt th:nth-child(12){width:6%}.vt th:nth-child(13){width:7%}.vt th:nth-child(14){width:8%}
+  .hero.six{grid-template-columns:repeat(6,1fr)}
+  .hero.six .hc .v{font-size:24px}.hero.six .hc{padding:16px 16px}
+  .legend2{display:flex;gap:18px;font-size:12px;color:#4a4a42;margin:0 0 10px}.legend2 i{display:inline-block;width:22px;height:8px;border-radius:4px;margin-right:6px;vertical-align:middle}
+  .br{display:grid;grid-template-columns:34px 210px 1fr;gap:12px;align-items:center;padding:6px 10px;border-radius:12px;transition:background .12s}
+  .br:hover{background:#f6f4ec}
+  .rk{display:inline-flex;width:26px;height:26px;border-radius:50%;background:#eceae0;color:#4a4a42;font-size:11.5px;font-weight:700;align-items:center;justify-content:center}
+  .bl b{display:block;font-size:15px;font-weight:700;letter-spacing:.01em;font-variant-numeric:tabular-nums}.bl span{display:block;color:#6b6a5f;font-size:11.5px;margin-top:1px}
+  .bb{display:flex;flex-direction:column;gap:5px}.brow{display:grid;grid-template-columns:1fr 110px;gap:12px;align-items:center}
+  .bt{background:#eceae0;border-radius:6px;height:12px;overflow:hidden}.bt.thin{height:7px}
+  .bf{background:linear-gradient(90deg,#17b378,#007a4d);height:100%;border-radius:6px}.bk{background:linear-gradient(90deg,#6f93e8,#2d5fd0);height:100%;border-radius:6px}
+  .bn{font-size:12.5px;color:#141413;font-variant-numeric:tabular-nums}.bn b{font-size:14px}.bn.km{color:#2d4f9e;font-size:12px}
+  .chartbox{background:#fff;border:1px solid #ece9dd;border-radius:18px;padding:18px 18px 10px;box-shadow:0 2px 12px rgba(20,20,19,.05)}
+  @media (max-width:900px){.hero.six{grid-template-columns:repeat(2,1fr)}.br{grid-template-columns:30px 1fr}.bb{grid-column:1/-1}}
+  @media (max-width:900px){.vt{table-layout:auto !important;min-width:880px !important}.vt th,.vt td{white-space:nowrap !important}.table-wrap{overflow-x:auto !important}body{padding:20px 14px !important}.chartbox{padding:12px 8px 6px}.bn{font-size:12px}.brow{grid-template-columns:1fr 92px}}
+  @media (max-width:520px){.hero.six{grid-template-columns:1fr 1fr;gap:10px}.hero.six .hc .v{font-size:20px}h1{font-size:22px}.br{grid-template-columns:28px 1fr;gap:8px}}
+  @media print{
+    @page{size:A4 landscape;margin:9mm}
+    html,body{width:100% !important;max-width:none !important;padding:0 !important;margin:0 !important;zoom:1 !important}
+    body,body *{color:#000 !important}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    h1{font-size:22px !important;margin:0 0 2px !important}.subtitle{margin:0 0 10px !important}
+    h2{font-size:15px !important;margin:12px 0 6px !important;break-after:avoid}
+    .hero.six{grid-template-columns:repeat(6,1fr) !important;gap:8px !important;margin-bottom:10px !important}
+    .hero.six .hc{padding:9px 10px !important;box-shadow:none !important;border:1px solid #999 !important}.hero.six .hc .v{font-size:17px !important;margin-top:6px !important}.hero.six .hc .s{font-size:9px !important;margin-top:3px !important}.hero.six .hc .l{font-size:8px !important}
+    .chartbox{box-shadow:none !important;border:1px solid #999 !important;padding:8px 10px !important;column-count:2;column-gap:22px}
+    .legend2{column-span:all;margin-bottom:4px !important;font-size:9px !important}
+    .br{padding:2px 4px !important;grid-template-columns:22px 118px 1fr !important;gap:6px !important;break-inside:avoid}
+    .rk{width:17px !important;height:17px !important;font-size:8.5px !important}.rk[style]{background:#fff !important;border:1px solid #000}
+    .bl b{font-size:10.5px !important}.bl span{font-size:8px !important}
+    .brow{grid-template-columns:1fr 62px !important;gap:6px !important}.bt{height:8px !important}.bt.thin{height:5px !important}.bn{font-size:8.5px !important}.bn b{font-size:9.5px !important}
+    .bf{background:#000 !important}.bk{background:#777 !important}
+    .table-wrap{box-shadow:none !important;border:1px solid #999 !important;overflow:visible !important}
+    .vt{width:100% !important;min-width:0 !important;table-layout:fixed !important}
+    .vt thead{display:table-header-group}.vt tr{break-inside:avoid}
+    .vt th,.vt td{font-size:8.5px !important;padding:4px 3px !important;white-space:normal !important}.vt th{font-size:7.5px !important}
+    .note{font-size:8px !important}
+    h2.pb{break-before:page}
+  }
+
+  .hero.four{grid-template-columns:repeat(4,1fr);gap:14px}
+  .sb{display:grid;grid-template-columns:260px 1fr 150px;gap:14px;align-items:center;padding:7px 4px;border-bottom:1px solid #f0efe6}
+  .sb:last-child{border-bottom:0}
+  .sl b{font-size:14px}.sl span{color:#6b6a5f;font-size:12px;margin-left:4px}
+  .st{background:#eceae0;height:10px;border-radius:5px}.sf{background:#0b8a5a;height:10px;border-radius:5px}
+  .sn{font-size:12.5px;text-align:right;color:#4a4a42;font-variant-numeric:tabular-nums}.sn b{color:#141413;font-size:14px}
+  .chartbox{padding:8px 20px !important}
+  .vt{table-layout:auto !important}
+  @media (max-width:900px){.hero.four{grid-template-columns:repeat(2,1fr)}.sb{grid-template-columns:1fr auto}.st{grid-column:1/-1;order:3}.sn{text-align:right}.vt{min-width:700px !important}}
+  @media print{
+    .hero.four{grid-template-columns:repeat(4,1fr) !important;gap:8px !important}
+    .chartbox{column-count:2;column-gap:24px;padding:6px 10px !important}
+    .sb{grid-template-columns:150px 1fr 82px !important;gap:6px !important;padding:3px 2px !important;break-inside:avoid}
+    .sl b{font-size:10px !important}.sl span{font-size:8px !important;display:block;margin:0}
+    .st,.sf{height:6px !important}.sf{background:#000 !important}.sn{font-size:8.5px !important}.sn b{font-size:9.5px !important}
+    .vt th,.vt td{font-size:9.5px !important;padding:5px 5px !important}.vt th{font-size:8px !important}
+    h2.pb{break-before:page}
+  }
+
+  .vt th:nth-child(n){width:auto !important}.vt th:nth-child(1){width:3% !important}.vt th:nth-child(2){width:17% !important}
+  .vt{table-layout:fixed !important;min-width:0 !important}.vt th,.vt td{white-space:normal !important}.vt td:nth-child(n+7){white-space:nowrap !important}
+  .hero.three{grid-template-columns:repeat(3,1fr);gap:14px;margin-top:-18px}.hero.three .hc .s{line-height:1.6}
+  .hero.three.t4{grid-template-columns:repeat(4,1fr)}.hero.three.t4 .hc .v{font-size:22px}@media (max-width:1000px){.hero.three.t4{grid-template-columns:1fr 1fr !important}}@media (max-width:520px){.hero.three.t4{grid-template-columns:1fr !important}}
+  .hero.six{grid-template-columns:repeat(6,1fr)}.hero.five{grid-template-columns:repeat(5,1fr);gap:12px}.hero.five .hc{padding:18px 16px}.hero.five .hc .v{font-size:28px}@media (max-width:1000px){.hero.five,.hero.six{grid-template-columns:repeat(2,1fr)}}@media (max-width:520px){.hero.five{grid-template-columns:1fr}}@media print{.hero.six{grid-template-columns:repeat(6,1fr)}.hero.five{grid-template-columns:repeat(5,1fr) !important}}
+  .sb{grid-template-columns:260px 1fr 290px}.sn b:last-child{color:#0b8a5a}
+  @media print{.sb{grid-template-columns:150px 1fr 120px !important}}
+  .vcards{display:none}
+  .vc{background:#fff;border:1px solid #ece9dd;border-radius:16px;padding:14px;box-shadow:0 2px 10px rgba(20,20,19,.05)}
+  .vh{display:flex;gap:10px;align-items:center;margin-bottom:10px}.vh b{display:block;font-size:16px}.vh span:not(.rk){display:block;font-size:12px;color:#6b6a5f}
+  .vg{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}.vg i{display:block;font-style:normal;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#6b6a5f}.vg b{font-size:15px}
+  .tb{display:flex;height:10px;border-radius:5px;overflow:hidden;margin-bottom:8px}.tb s{display:block;height:100%}
+  .tl{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;font-size:11px;color:#4a4a42}.tl b{display:block;font-size:12.5px;color:#141413}.tl u{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+  @media (max-width:900px){.vtab{display:none !important}.vcards{display:grid;gap:10px}.hero.four{grid-template-columns:1fr 1fr;gap:10px}.hc{padding:14px}.hc .v{font-size:22px}.sb{grid-template-columns:1fr auto}.sn{font-size:12px}}
+  @media print{.vcards{display:none !important}.vtab{display:block !important}.vt th,.vt td{font-size:8.5px !important;padding:4px 3px !important}}
+  .hero.three{grid-template-columns:repeat(3,1fr) !important}@media (max-width:900px){.hero.three{grid-template-columns:1fr !important}}
+  .sb{grid-template-columns:260px 1fr 250px}
+</style>
+</head>
+<body>
+  <h1>Vehicle Performance</h1>
+  <p class="subtitle">Enterprises Rent-a-Car, Bahrain &nbsp;•&nbsp; 17 October 4:00 AM &ndash; 18 October 4:00 AM 2026</p>
+  <div class="hero four six"><div class="hc" style="--ac:#141413;--bg:#eceae0"><div class="l"><i><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16V11l2-5h10l2 5v5M3 16h18M7 19v-3M17 19v-3"/></svg></i>Vehicles With Trips</div><div class="v">21</div><div class="s">of 23 in the fleet file</div></div><div class="hc" style="--ac:#0b8a5a;--bg:#e3f4ec"><div class="l"><i><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16V11l2-5h10l2 5v5M3 16h18M7 19v-3M17 19v-3"/></svg></i>Trips</div><div class="v">185</div><div class="s">avg 8.8 per vehicle</div></div><div class="hc" style="--ac:#c98a00;--bg:#fdf1d8"><div class="l"><i><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20L10 4l4 10 7 6"/></svg></i>Distance</div><div class="v">1,959<small>km</small></div><div class="s">avg 10.6 km per trip</div></div><div class="hc" style="--ac:#2d5fd0;--bg:#e4ecfb"><div class="l"><i><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg></i>Earnings</div><div class="v">961</div><div class="s">86 in cash</div></div><div class="hc" style="--ac:#c98a00;--bg:#fdf1d8"><div class="l"><i><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></i>Avg Min / Trip</div><div class="v">16<small>min</small></div><div class="s">on-trip time per trip</div></div><div class="hc" style="--ac:#0b8a5a;--bg:#e3f4ec"><div class="l"><i><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16V11l2-5h10l2 5v5M3 16h18M7 19v-3M17 19v-3"/></svg></i>Earnings / Trip</div><div class="v">5.2</div><div class="s">per completed trip</div></div></div>
+  <div class="hero three"><div class="hc" style="--ac:#0b8a5a;--bg:#e3f4ec"><div class="l"><i><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></i>On Trip Time</div><div class="v">49 h 25 min</div><div class="s">avg 2 h 21 min per vehicle &middot; 18% of online</div></div><div class="hc" style="--ac:#9aa0a6;--bg:#eceae0"><div class="l"><i><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></i>Free Time</div><div class="v">220 h 08 min</div><div class="s">avg 10 h 29 min per vehicle &middot; 82% of online</div></div><div class="hc" style="--ac:#141413;--bg:#eceae0"><div class="l"><i><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></i>Hours Online</div><div class="v">269 h 32 min</div><div class="s">avg 12 h 50 min per vehicle</div></div></div>
+  <h2>Trips by Vehicle</h2>
+  <div class="chartbox">
+<div class="sb"><div class="sl"><b>255469</b> <span>2025 Genesis G80</span></div><div class="st"><div class="sf" style="width:100.0%"></div></div><div class="sn"><b>14</b> trips &middot; 151 km &middot; <b>16</b> min/trip</div></div>
+<div class="sb"><div class="sl"><b>686787</b> <span>2026 Audi A6</span></div><div class="st"><div class="sf" style="width:92.9%"></div></div><div class="sn"><b>13</b> trips &middot; 125 km &middot; <b>16</b> min/trip</div></div>
+<div class="sb"><div class="sl"><b>255490</b> <span>2025 Genesis G80</span></div><div class="st"><div class="sf" style="width:85.7%"></div></div><div class="sn"><b>12</b> trips &middot; 84 km &middot; <b>13</b> min/trip</div></div>
+<div class="sb"><div class="sl"><b>255730</b> <span>2025 Genesis G80</span></div><div class="st"><div class="sf" style="width:78.6%"></div></div><div class="sn"><b>11</b> trips &middot; 81 km &middot; <b>12</b> min/trip</div></div>
+<div class="sb"><div class="sl"><b>692890</b> <span>2025 Hyundai Staria</span></div><div class="st"><div class="sf" style="width:78.6%"></div></div><div class="sn"><b>11</b> trips &middot; 82 km &middot; <b>13</b> min/trip</div></div>
+<div class="sb"><div class="sl"><b>255646</b> <span>2025 Genesis G80</span></div><div class="st"><div class="sf" style="width:78.6%"></div></div><div class="sn"><b>11</b> trips &middot; 59 km &middot; <b>9</b> min/trip</div></div>
+<div class="sb"><div class="sl"><b>255605</b> <span>2025 Genesis G80</span></div><div class="st"><div class="sf" style="width:64.3%"></div></div><div class="sn"><b>9</b> trips &middot; 126 km &middot; <b>18</b> min/trip</div></div>
+<div class="sb"><div class="sl"><b>687676</b> <span>2026 Audi A6</span></div><div class="st"><div class="sf" style="width:64.3%"></div></div><div class="sn"><b>9</b> trips &middot; 130 km &middot; <b>21</b> min/trip</div></div>
+<div class="sb"><div class="sl"><b>87800</b> <span>2022 Mercedes-Benz E-Class</span></div><div class="st"><div class="sf" style="width:64.3%"></div></div><div class="sn"><b>9</b> trips &middot; 110 km &middot; <b>21</b> min/trip</div></div>
+<div class="sb"><div class="sl"><b>255636</b> <span>2025 Genesis G80</span></div><div class="st"><div class="sf" style="width:64.3%"></div></div><div class="sn"><b>9</b> trips &middot; 91 km &middot; <b>16</b> min/trip</div></div>
+<div class="sb"><div class="sl"><b>167727</b> <span>2025 Nissan Patrol</span></div><div class="st"><div class="sf" style="width:64.3%"></div></div><div class="sn"><b>9</b> trips &middot; 64 km &middot; <b>12</b> min/trip</div></div>
+<div class="sb"><div class="sl"><b>479266</b> <span>2026 Genesis G80</span></div><div class="st"><div class="sf" style="width:57.1%"></div></div><div class="sn"><b>8</b> trips &middot; 156 km &middot; <b>24</b> min/trip</div></div>
+<div class="sb"><div class="sl"><b>313623</b> <span>2024 Lexus ES</span></div><div class="st"><div class="sf" style="width:57.1%"></div></div><div class="sn"><b>8</b> trips &middot; 92 km &middot; <b>14</b> min/trip</div></div>
+<div class="sb"><div class="sl"><b>188100</b> <span>2025 Toyota Land Cruiser</span></div><div class="st"><div class="sf" style="width:57.1%"></div></div><div class="sn"><b>8</b> trips &middot; 104 km &middot; <b>22</b> min/trip</div></div>
+<div class="sb"><div class="sl"><b>567200</b> <span>2024 Hyundai Staria</span></div><div class="st"><div class="sf" style="width:57.1%"></div></div><div class="sn"><b>8</b> trips &middot; 93 km &middot; <b>16</b> min/trip</div></div>
+<div class="sb"><div class="sl"><b>472201</b> <span>2025 BMW 5-series</span></div><div class="st"><div class="sf" style="width:57.1%"></div></div><div class="sn"><b>8</b> trips &middot; 46 km &middot; <b>11</b> min/trip</div></div>
+<div class="sb"><div class="sl"><b>532100</b> <span>2024 Hyundai Staria</span></div><div class="st"><div class="sf" style="width:50.0%"></div></div><div class="sn"><b>7</b> trips &middot; 124 km &middot; <b>20</b> min/trip</div></div>
+<div class="sb"><div class="sl"><b>255684</b> <span>2025 Genesis G80</span></div><div class="st"><div class="sf" style="width:50.0%"></div></div><div class="sn"><b>7</b> trips &middot; 84 km &middot; <b>20</b> min/trip</div></div>
+<div class="sb"><div class="sl"><b>692894</b> <span>2025 Hyundai Staria</span></div><div class="st"><div class="sf" style="width:35.7%"></div></div><div class="sn"><b>5</b> trips &middot; 44 km &middot; <b>18</b> min/trip</div></div>
+<div class="sb"><div class="sl"><b>126800</b> <span>2024 Hyundai Staria</span></div><div class="st"><div class="sf" style="width:35.7%"></div></div><div class="sn"><b>5</b> trips &middot; 36 km &middot; <b>14</b> min/trip</div></div>
+<div class="sb"><div class="sl"><b>479249</b> <span>2026 Genesis G80</span></div><div class="st"><div class="sf" style="width:28.6%"></div></div><div class="sn"><b>4</b> trips &middot; 76 km &middot; <b>18</b> min/trip</div></div>
+  </div>
+  <h2 class="pb">Vehicle Details</h2>
+  <div class="table-wrap vtab"><table class="vt"><thead><tr><th class="num">#</th><th>Vehicle</th><th>Plate</th><th class="num">Trips</th><th class="num">KM</th><th class="num">Earnings</th><th class="num">Avg Min / Trip</th><th class="num">On Trip</th><th class="num">Free</th><th class="num">Online</th></tr></thead><tbody>
+<tr><td class="num">1</td><td>2025 Genesis G80</td><td><b>255469</b></td><td class="num">14</td><td class="num">151</td><td class="num">75</td><td class="num">16</td><td class="num">3 h 44 min</td><td class="num">15 h 38 min</td><td class="num"><b>19 h 23 min</b></td></tr>
+<tr><td class="num">2</td><td>2026 Audi A6</td><td><b>686787</b></td><td class="num">13</td><td class="num">125</td><td class="num">68</td><td class="num">16</td><td class="num">3 h 23 min</td><td class="num">8 h 58 min</td><td class="num"><b>12 h 20 min</b></td></tr>
+<tr><td class="num">3</td><td>2025 Genesis G80</td><td><b>255490</b></td><td class="num">12</td><td class="num">84</td><td class="num">55</td><td class="num">13</td><td class="num">2 h 35 min</td><td class="num">9 h 03 min</td><td class="num"><b>11 h 38 min</b></td></tr>
+<tr><td class="num">4</td><td>2025 Genesis G80</td><td><b>255730</b></td><td class="num">11</td><td class="num">81</td><td class="num">49</td><td class="num">12</td><td class="num">2 h 08 min</td><td class="num">9 h 43 min</td><td class="num"><b>11 h 52 min</b></td></tr>
+<tr><td class="num">5</td><td>2025 Hyundai Staria</td><td><b>692890</b></td><td class="num">11</td><td class="num">82</td><td class="num">45</td><td class="num">13</td><td class="num">2 h 28 min</td><td class="num">15 h 11 min</td><td class="num"><b>17 h 38 min</b></td></tr>
+<tr><td class="num">6</td><td>2025 Genesis G80</td><td><b>255646</b></td><td class="num">11</td><td class="num">59</td><td class="num">39</td><td class="num">9</td><td class="num">1 h 35 min</td><td class="num">9 h 56 min</td><td class="num"><b>11 h 31 min</b></td></tr>
+<tr><td class="num">7</td><td>2025 Genesis G80</td><td><b>255605</b></td><td class="num">9</td><td class="num">126</td><td class="num">57</td><td class="num">18</td><td class="num">2 h 46 min</td><td class="num">8 h 54 min</td><td class="num"><b>11 h 40 min</b></td></tr>
+<tr><td class="num">8</td><td>2026 Audi A6</td><td><b>687676</b></td><td class="num">9</td><td class="num">130</td><td class="num">56</td><td class="num">21</td><td class="num">3 h 07 min</td><td class="num">10 h 41 min</td><td class="num"><b>13 h 47 min</b></td></tr>
+<tr><td class="num">9</td><td>2022 Mercedes-Benz E-Class</td><td><b>87800</b></td><td class="num">9</td><td class="num">110</td><td class="num">53</td><td class="num">21</td><td class="num">3 h 07 min</td><td class="num">8 h 13 min</td><td class="num"><b>11 h 20 min</b></td></tr>
+<tr><td class="num">10</td><td>2025 Genesis G80</td><td><b>255636</b></td><td class="num">9</td><td class="num">91</td><td class="num">43</td><td class="num">16</td><td class="num">2 h 26 min</td><td class="num">9 h 17 min</td><td class="num"><b>11 h 43 min</b></td></tr>
+<tr><td class="num">11</td><td>2025 Nissan Patrol</td><td><b>167727</b></td><td class="num">9</td><td class="num">64</td><td class="num">38</td><td class="num">12</td><td class="num">1 h 50 min</td><td class="num">10 h 14 min</td><td class="num"><b>12 h 04 min</b></td></tr>
+<tr><td class="num">12</td><td>2026 Genesis G80</td><td><b>479266</b></td><td class="num">8</td><td class="num">156</td><td class="num">63</td><td class="num">24</td><td class="num">3 h 16 min</td><td class="num">7 h 58 min</td><td class="num"><b>11 h 14 min</b></td></tr>
+<tr><td class="num">13</td><td>2024 Lexus ES</td><td><b>313623</b></td><td class="num">8</td><td class="num">92</td><td class="num">43</td><td class="num">14</td><td class="num">1 h 53 min</td><td class="num">14 h 35 min</td><td class="num"><b>16 h 28 min</b></td></tr>
+<tr><td class="num">14</td><td>2025 Toyota Land Cruiser</td><td><b>188100</b></td><td class="num">8</td><td class="num">104</td><td class="num">41</td><td class="num">22</td><td class="num">2 h 59 min</td><td class="num">10 h 40 min</td><td class="num"><b>13 h 39 min</b></td></tr>
+<tr><td class="num">15</td><td>2024 Hyundai Staria</td><td><b>567200</b></td><td class="num">8</td><td class="num">93</td><td class="num">41</td><td class="num">16</td><td class="num">2 h 10 min</td><td class="num">9 h 34 min</td><td class="num"><b>11 h 44 min</b></td></tr>
+<tr><td class="num">16</td><td>2025 BMW 5-series</td><td><b>472201</b></td><td class="num">8</td><td class="num">46</td><td class="num">33</td><td class="num">11</td><td class="num">1 h 25 min</td><td class="num">9 h 52 min</td><td class="num"><b>11 h 16 min</b></td></tr>
+<tr><td class="num">17</td><td>2024 Hyundai Staria</td><td><b>532100</b></td><td class="num">7</td><td class="num">124</td><td class="num">47</td><td class="num">20</td><td class="num">2 h 20 min</td><td class="num">13 h 28 min</td><td class="num"><b>15 h 49 min</b></td></tr>
+<tr><td class="num">18</td><td>2025 Genesis G80</td><td><b>255684</b></td><td class="num">7</td><td class="num">84</td><td class="num">42</td><td class="num">20</td><td class="num">2 h 23 min</td><td class="num">8 h 39 min</td><td class="num"><b>11 h 02 min</b></td></tr>
+<tr><td class="num">19</td><td>2025 Hyundai Staria</td><td><b>692894</b></td><td class="num">5</td><td class="num">44</td><td class="num">23</td><td class="num">18</td><td class="num">1 h 29 min</td><td class="num">10 h 01 min</td><td class="num"><b>11 h 29 min</b></td></tr>
+<tr><td class="num">20</td><td>2024 Hyundai Staria</td><td><b>126800</b></td><td class="num">5</td><td class="num">36</td><td class="num">22</td><td class="num">14</td><td class="num">1 h 10 min</td><td class="num">9 h 46 min</td><td class="num"><b>10 h 56 min</b></td></tr>
+<tr><td class="num">21</td><td>2026 Genesis G80</td><td><b>479249</b></td><td class="num">4</td><td class="num">76</td><td class="num">29</td><td class="num">18</td><td class="num">1 h 11 min</td><td class="num">9 h 48 min</td><td class="num"><b>10 h 59 min</b></td></tr>
+<tr class="tot-row"><td></td><td>Total</td><td></td><td class="num">185</td><td class="num">1,959</td><td class="num">961</td><td class="num">16</td><td class="num">49 h 25 min</td><td class="num">220 h 08 min</td><td class="num">269 h 32 min</td></tr>
+  </tbody></table></div>
+  <div class="vcards">
+<div class="vc"><div class="vh"><span class="rk">1</span><div><b>255469</b><span>2025 Genesis G80</span></div></div><div class="vg"><div><i>Trips</i><b>14</b></div><div><i>KM</i><b>151</b></div><div><i>Earnings</i><b>75</b></div><div><i>Avg Min / Trip</i><b>16 min</b></div></div><div class="tb"><s style="width:19.3%;background:#0b8a5a"></s><s style="width:80.7%;background:#9aa0a6"></s></div><div class="tl"><div><u style="background:#0b8a5a"></u>On trip<b>3 h 44 min</b></div><div><u style="background:#9aa0a6"></u>Free<b>15 h 38 min</b></div><div><u style="background:#141413"></u>Online<b>19 h 23 min</b></div></div></div>
+<div class="vc"><div class="vh"><span class="rk">2</span><div><b>686787</b><span>2026 Audi A6</span></div></div><div class="vg"><div><i>Trips</i><b>13</b></div><div><i>KM</i><b>125</b></div><div><i>Earnings</i><b>68</b></div><div><i>Avg Min / Trip</i><b>16 min</b></div></div><div class="tb"><s style="width:27.4%;background:#0b8a5a"></s><s style="width:72.6%;background:#9aa0a6"></s></div><div class="tl"><div><u style="background:#0b8a5a"></u>On trip<b>3 h 23 min</b></div><div><u style="background:#9aa0a6"></u>Free<b>8 h 58 min</b></div><div><u style="background:#141413"></u>Online<b>12 h 20 min</b></div></div></div>
+<div class="vc"><div class="vh"><span class="rk">3</span><div><b>255490</b><span>2025 Genesis G80</span></div></div><div class="vg"><div><i>Trips</i><b>12</b></div><div><i>KM</i><b>84</b></div><div><i>Earnings</i><b>55</b></div><div><i>Avg Min / Trip</i><b>13 min</b></div></div><div class="tb"><s style="width:22.2%;background:#0b8a5a"></s><s style="width:77.8%;background:#9aa0a6"></s></div><div class="tl"><div><u style="background:#0b8a5a"></u>On trip<b>2 h 35 min</b></div><div><u style="background:#9aa0a6"></u>Free<b>9 h 03 min</b></div><div><u style="background:#141413"></u>Online<b>11 h 38 min</b></div></div></div>
+<div class="vc"><div class="vh"><span class="rk">4</span><div><b>255730</b><span>2025 Genesis G80</span></div></div><div class="vg"><div><i>Trips</i><b>11</b></div><div><i>KM</i><b>81</b></div><div><i>Earnings</i><b>49</b></div><div><i>Avg Min / Trip</i><b>12 min</b></div></div><div class="tb"><s style="width:18.0%;background:#0b8a5a"></s><s style="width:82.0%;background:#9aa0a6"></s></div><div class="tl"><div><u style="background:#0b8a5a"></u>On trip<b>2 h 08 min</b></div><div><u style="background:#9aa0a6"></u>Free<b>9 h 43 min</b></div><div><u style="background:#141413"></u>Online<b>11 h 52 min</b></div></div></div>
+<div class="vc"><div class="vh"><span class="rk">5</span><div><b>692890</b><span>2025 Hyundai Staria</span></div></div><div class="vg"><div><i>Trips</i><b>11</b></div><div><i>KM</i><b>82</b></div><div><i>Earnings</i><b>45</b></div><div><i>Avg Min / Trip</i><b>13 min</b></div></div><div class="tb"><s style="width:13.9%;background:#0b8a5a"></s><s style="width:86.1%;background:#9aa0a6"></s></div><div class="tl"><div><u style="background:#0b8a5a"></u>On trip<b>2 h 28 min</b></div><div><u style="background:#9aa0a6"></u>Free<b>15 h 11 min</b></div><div><u style="background:#141413"></u>Online<b>17 h 38 min</b></div></div></div>
+<div class="vc"><div class="vh"><span class="rk">6</span><div><b>255646</b><span>2025 Genesis G80</span></div></div><div class="vg"><div><i>Trips</i><b>11</b></div><div><i>KM</i><b>59</b></div><div><i>Earnings</i><b>39</b></div><div><i>Avg Min / Trip</i><b>9 min</b></div></div><div class="tb"><s style="width:13.8%;background:#0b8a5a"></s><s style="width:86.2%;background:#9aa0a6"></s></div><div class="tl"><div><u style="background:#0b8a5a"></u>On trip<b>1 h 35 min</b></div><div><u style="background:#9aa0a6"></u>Free<b>9 h 56 min</b></div><div><u style="background:#141413"></u>Online<b>11 h 31 min</b></div></div></div>
+<div class="vc"><div class="vh"><span class="rk">7</span><div><b>255605</b><span>2025 Genesis G80</span></div></div><div class="vg"><div><i>Trips</i><b>9</b></div><div><i>KM</i><b>126</b></div><div><i>Earnings</i><b>57</b></div><div><i>Avg Min / Trip</i><b>18 min</b></div></div><div class="tb"><s style="width:23.7%;background:#0b8a5a"></s><s style="width:76.3%;background:#9aa0a6"></s></div><div class="tl"><div><u style="background:#0b8a5a"></u>On trip<b>2 h 46 min</b></div><div><u style="background:#9aa0a6"></u>Free<b>8 h 54 min</b></div><div><u style="background:#141413"></u>Online<b>11 h 40 min</b></div></div></div>
+<div class="vc"><div class="vh"><span class="rk">8</span><div><b>687676</b><span>2026 Audi A6</span></div></div><div class="vg"><div><i>Trips</i><b>9</b></div><div><i>KM</i><b>130</b></div><div><i>Earnings</i><b>56</b></div><div><i>Avg Min / Trip</i><b>21 min</b></div></div><div class="tb"><s style="width:22.6%;background:#0b8a5a"></s><s style="width:77.4%;background:#9aa0a6"></s></div><div class="tl"><div><u style="background:#0b8a5a"></u>On trip<b>3 h 07 min</b></div><div><u style="background:#9aa0a6"></u>Free<b>10 h 41 min</b></div><div><u style="background:#141413"></u>Online<b>13 h 47 min</b></div></div></div>
+<div class="vc"><div class="vh"><span class="rk">9</span><div><b>87800</b><span>2022 Mercedes-Benz E-Class</span></div></div><div class="vg"><div><i>Trips</i><b>9</b></div><div><i>KM</i><b>110</b></div><div><i>Earnings</i><b>53</b></div><div><i>Avg Min / Trip</i><b>21 min</b></div></div><div class="tb"><s style="width:27.4%;background:#0b8a5a"></s><s style="width:72.6%;background:#9aa0a6"></s></div><div class="tl"><div><u style="background:#0b8a5a"></u>On trip<b>3 h 07 min</b></div><div><u style="background:#9aa0a6"></u>Free<b>8 h 13 min</b></div><div><u style="background:#141413"></u>Online<b>11 h 20 min</b></div></div></div>
+<div class="vc"><div class="vh"><span class="rk">10</span><div><b>255636</b><span>2025 Genesis G80</span></div></div><div class="vg"><div><i>Trips</i><b>9</b></div><div><i>KM</i><b>91</b></div><div><i>Earnings</i><b>43</b></div><div><i>Avg Min / Trip</i><b>16 min</b></div></div><div class="tb"><s style="width:20.8%;background:#0b8a5a"></s><s style="width:79.2%;background:#9aa0a6"></s></div><div class="tl"><div><u style="background:#0b8a5a"></u>On trip<b>2 h 26 min</b></div><div><u style="background:#9aa0a6"></u>Free<b>9 h 17 min</b></div><div><u style="background:#141413"></u>Online<b>11 h 43 min</b></div></div></div>
+<div class="vc"><div class="vh"><span class="rk">11</span><div><b>167727</b><span>2025 Nissan Patrol</span></div></div><div class="vg"><div><i>Trips</i><b>9</b></div><div><i>KM</i><b>64</b></div><div><i>Earnings</i><b>38</b></div><div><i>Avg Min / Trip</i><b>12 min</b></div></div><div class="tb"><s style="width:15.2%;background:#0b8a5a"></s><s style="width:84.8%;background:#9aa0a6"></s></div><div class="tl"><div><u style="background:#0b8a5a"></u>On trip<b>1 h 50 min</b></div><div><u style="background:#9aa0a6"></u>Free<b>10 h 14 min</b></div><div><u style="background:#141413"></u>Online<b>12 h 04 min</b></div></div></div>
+<div class="vc"><div class="vh"><span class="rk">12</span><div><b>479266</b><span>2026 Genesis G80</span></div></div><div class="vg"><div><i>Trips</i><b>8</b></div><div><i>KM</i><b>156</b></div><div><i>Earnings</i><b>63</b></div><div><i>Avg Min / Trip</i><b>24 min</b></div></div><div class="tb"><s style="width:29.0%;background:#0b8a5a"></s><s style="width:71.0%;background:#9aa0a6"></s></div><div class="tl"><div><u style="background:#0b8a5a"></u>On trip<b>3 h 16 min</b></div><div><u style="background:#9aa0a6"></u>Free<b>7 h 58 min</b></div><div><u style="background:#141413"></u>Online<b>11 h 14 min</b></div></div></div>
+<div class="vc"><div class="vh"><span class="rk">13</span><div><b>313623</b><span>2024 Lexus ES</span></div></div><div class="vg"><div><i>Trips</i><b>8</b></div><div><i>KM</i><b>92</b></div><div><i>Earnings</i><b>43</b></div><div><i>Avg Min / Trip</i><b>14 min</b></div></div><div class="tb"><s style="width:11.5%;background:#0b8a5a"></s><s style="width:88.5%;background:#9aa0a6"></s></div><div class="tl"><div><u style="background:#0b8a5a"></u>On trip<b>1 h 53 min</b></div><div><u style="background:#9aa0a6"></u>Free<b>14 h 35 min</b></div><div><u style="background:#141413"></u>Online<b>16 h 28 min</b></div></div></div>
+<div class="vc"><div class="vh"><span class="rk">14</span><div><b>188100</b><span>2025 Toyota Land Cruiser</span></div></div><div class="vg"><div><i>Trips</i><b>8</b></div><div><i>KM</i><b>104</b></div><div><i>Earnings</i><b>41</b></div><div><i>Avg Min / Trip</i><b>22 min</b></div></div><div class="tb"><s style="width:21.8%;background:#0b8a5a"></s><s style="width:78.2%;background:#9aa0a6"></s></div><div class="tl"><div><u style="background:#0b8a5a"></u>On trip<b>2 h 59 min</b></div><div><u style="background:#9aa0a6"></u>Free<b>10 h 40 min</b></div><div><u style="background:#141413"></u>Online<b>13 h 39 min</b></div></div></div>
+<div class="vc"><div class="vh"><span class="rk">15</span><div><b>567200</b><span>2024 Hyundai Staria</span></div></div><div class="vg"><div><i>Trips</i><b>8</b></div><div><i>KM</i><b>93</b></div><div><i>Earnings</i><b>41</b></div><div><i>Avg Min / Trip</i><b>16 min</b></div></div><div class="tb"><s style="width:18.5%;background:#0b8a5a"></s><s style="width:81.5%;background:#9aa0a6"></s></div><div class="tl"><div><u style="background:#0b8a5a"></u>On trip<b>2 h 10 min</b></div><div><u style="background:#9aa0a6"></u>Free<b>9 h 34 min</b></div><div><u style="background:#141413"></u>Online<b>11 h 44 min</b></div></div></div>
+<div class="vc"><div class="vh"><span class="rk">16</span><div><b>472201</b><span>2025 BMW 5-series</span></div></div><div class="vg"><div><i>Trips</i><b>8</b></div><div><i>KM</i><b>46</b></div><div><i>Earnings</i><b>33</b></div><div><i>Avg Min / Trip</i><b>11 min</b></div></div><div class="tb"><s style="width:12.5%;background:#0b8a5a"></s><s style="width:87.5%;background:#9aa0a6"></s></div><div class="tl"><div><u style="background:#0b8a5a"></u>On trip<b>1 h 25 min</b></div><div><u style="background:#9aa0a6"></u>Free<b>9 h 52 min</b></div><div><u style="background:#141413"></u>Online<b>11 h 16 min</b></div></div></div>
+<div class="vc"><div class="vh"><span class="rk">17</span><div><b>532100</b><span>2024 Hyundai Staria</span></div></div><div class="vg"><div><i>Trips</i><b>7</b></div><div><i>KM</i><b>124</b></div><div><i>Earnings</i><b>47</b></div><div><i>Avg Min / Trip</i><b>20 min</b></div></div><div class="tb"><s style="width:14.8%;background:#0b8a5a"></s><s style="width:85.2%;background:#9aa0a6"></s></div><div class="tl"><div><u style="background:#0b8a5a"></u>On trip<b>2 h 20 min</b></div><div><u style="background:#9aa0a6"></u>Free<b>13 h 28 min</b></div><div><u style="background:#141413"></u>Online<b>15 h 49 min</b></div></div></div>
+<div class="vc"><div class="vh"><span class="rk">18</span><div><b>255684</b><span>2025 Genesis G80</span></div></div><div class="vg"><div><i>Trips</i><b>7</b></div><div><i>KM</i><b>84</b></div><div><i>Earnings</i><b>42</b></div><div><i>Avg Min / Trip</i><b>20 min</b></div></div><div class="tb"><s style="width:21.6%;background:#0b8a5a"></s><s style="width:78.4%;background:#9aa0a6"></s></div><div class="tl"><div><u style="background:#0b8a5a"></u>On trip<b>2 h 23 min</b></div><div><u style="background:#9aa0a6"></u>Free<b>8 h 39 min</b></div><div><u style="background:#141413"></u>Online<b>11 h 02 min</b></div></div></div>
+<div class="vc"><div class="vh"><span class="rk">19</span><div><b>692894</b><span>2025 Hyundai Staria</span></div></div><div class="vg"><div><i>Trips</i><b>5</b></div><div><i>KM</i><b>44</b></div><div><i>Earnings</i><b>23</b></div><div><i>Avg Min / Trip</i><b>18 min</b></div></div><div class="tb"><s style="width:12.9%;background:#0b8a5a"></s><s style="width:87.1%;background:#9aa0a6"></s></div><div class="tl"><div><u style="background:#0b8a5a"></u>On trip<b>1 h 29 min</b></div><div><u style="background:#9aa0a6"></u>Free<b>10 h 01 min</b></div><div><u style="background:#141413"></u>Online<b>11 h 29 min</b></div></div></div>
+<div class="vc"><div class="vh"><span class="rk">20</span><div><b>126800</b><span>2024 Hyundai Staria</span></div></div><div class="vg"><div><i>Trips</i><b>5</b></div><div><i>KM</i><b>36</b></div><div><i>Earnings</i><b>22</b></div><div><i>Avg Min / Trip</i><b>14 min</b></div></div><div class="tb"><s style="width:10.7%;background:#0b8a5a"></s><s style="width:89.3%;background:#9aa0a6"></s></div><div class="tl"><div><u style="background:#0b8a5a"></u>On trip<b>1 h 10 min</b></div><div><u style="background:#9aa0a6"></u>Free<b>9 h 46 min</b></div><div><u style="background:#141413"></u>Online<b>10 h 56 min</b></div></div></div>
+<div class="vc"><div class="vh"><span class="rk">21</span><div><b>479249</b><span>2026 Genesis G80</span></div></div><div class="vg"><div><i>Trips</i><b>4</b></div><div><i>KM</i><b>76</b></div><div><i>Earnings</i><b>29</b></div><div><i>Avg Min / Trip</i><b>18 min</b></div></div><div class="tb"><s style="width:10.7%;background:#0b8a5a"></s><s style="width:89.3%;background:#9aa0a6"></s></div><div class="tl"><div><u style="background:#0b8a5a"></u>On trip<b>1 h 11 min</b></div><div><u style="background:#9aa0a6"></u>Free<b>9 h 48 min</b></div><div><u style="background:#141413"></u>Online<b>10 h 59 min</b></div></div></div>
+  </div>
+  <p class="note" style="margin-top:12px">Trips, earnings, cash and hours come from the vehicle performance file. KM is the sum of completed-trip distances from the trip activity file. Free time = hours online minus hours on trip. Avg min per trip = on-trip time / trips. Vehicles 568400 and 513600 had no trips and are not listed. The vehicle time and distance file for this day covers only part of the day (its on-trip time is well below the performance file), so it is not used here.</p>
+</body>
+</html>

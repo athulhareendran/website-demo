@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Syed Ahmed — Night Shift Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html { overflow-x: hidden; }
+  body {
+    font-family: "Poppins", Arial, sans-serif;
+    background: #faf9f5;
+    color: #141413;
+    padding: 48px;
+    max-width: 1280px;
+    margin: 0 auto;
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+  h1 { font-family: "Poppins", Arial, sans-serif; font-weight: 600; font-size: 30px; margin-bottom: 4px; }
+  h2 { font-family: "Poppins", Arial, sans-serif; font-weight: 600; font-size: 21px; margin-top: 48px; margin-bottom: 14px; }
+  p.subtitle { font-size: 13.5px; color: #8a8a82; margin-top: 0; margin-bottom: 30px; }
+  p.note { font-size: 12.5px; color: #888; margin-top: -6px; margin-bottom: 18px; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 16px; margin-bottom: 8px; }
+  .kpi-card { background: #fff; border-radius: 14px; padding: 18px 20px; border: 1px solid #f0efe6; box-shadow: 0 2px 10px rgba(20,20,19,0.05); }
+  .kpi-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; color: #8a8a82; font-weight: 800; margin-bottom: 8px; }
+  .kpi-value { font-family: "Poppins", Arial, sans-serif; font-weight: 800; font-size: 26px; }
+  .kpi-value.green { color: #007a4d; }
+  .kpi-value.red { color: #b40e0e; }
+  .cols { display: flex; gap: 20px; flex-wrap: wrap; }
+  .cols > div { flex: 1; min-width: 300px; }
+  .chart-card { background: #fff; border-radius: 14px; box-shadow: 0 2px 10px rgba(20,20,19,0.06); border: 1px solid #f0efe6; padding: 24px 26px 16px; }
+  .chart-title { font-size: 11px; color: #8a8a82; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 20px; font-weight: 600; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .chart-title .peak { color: #141413; font-weight: 600; text-transform: none; letter-spacing: 0; font-size: 13.5px; font-family: "Poppins", Arial, sans-serif; }
+  .chart-bars { display: flex; align-items: flex-end; gap: 4px; height: 150px; padding-bottom: 10px; position: relative; background-image: repeating-linear-gradient(to top, #eeece1 0, #eeece1 1px, transparent 1px, transparent 25%); background-size: 100% 100%; }
+  .chart-bar-wrap { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; position: relative; }
+  .chart-bar { width: 100%; max-width: 20px; border-radius: 5px 5px 2px 2px; min-height: 3px; position: relative; box-shadow: inset 0 -6px 8px -4px rgba(0,0,0,0.12); }
+  .chart-bar.completed-bar { background: linear-gradient(180deg, #17b378 0%, #007a4d 100%); }
+  .chart-bar.cancelled-bar { background: linear-gradient(180deg, #ef5a5a 0%, #b40e0e 100%); }
+  .chart-bar.peak { box-shadow: 0 0 0 2px #faf9f5, 0 0 0 3.5px #141413, inset 0 -6px 8px -4px rgba(0,0,0,0.15); }
+  .chart-bar-count { font-size: 10px; font-weight: 600; color: #141413; margin-bottom: 5px; font-variant-numeric: tabular-nums; }
+  .chart-bar-count.peak-count-completed { color: #007a4d; }
+  .chart-bar-count.peak-count-cancelled { color: #b40e0e; }
+  .chart-labels { display: flex; gap: 4px; margin-top: 8px; }
+  .chart-label { flex: 1; min-width: 0; text-align: center; font-size: 9.5px; font-weight: 600; color: #9a988c; white-space: nowrap; overflow: visible; letter-spacing: 0.01em; }
+  table { border-collapse: collapse; width: 100%; background: #fff; border-radius: 12px; overflow: hidden; font-size: 13px; }
+  .table-wrap { background: #fff; border-radius: 14px; border: 1px solid #f0efe6; box-shadow: 0 2px 10px rgba(20,20,19,0.05); overflow-x: auto; }
+  .table-wrap table { min-width: 480px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid #f0efe6; }
+  th { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em; color: #8a8a82; font-weight: 600; background: #fbfaf6; }
+  tr:last-child td { border-bottom: none; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .day-badge { display: inline-block; background: #f3f1e8; color: #6b6a5f; font-size: 10.5px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; }
+
+  .alert-card { background: #fff7f0; border: 1px solid #f3d9b8; border-radius: 14px; padding: 20px 22px; margin-bottom: 20px; }
+  .alert-title { font-weight: 600; font-size: 14px; color: #a35a1a; margin-bottom: 8px; }
+  .alert-text { font-size: 13.5px; color: #4a3a2a; }
+  .incident-table { font-size: 12.5px; }
+  .incident-table th, .incident-table td { padding: 9px 10px; }
+  .same-addr { color: #b45309; font-weight: 600; }
+  .badge { display: inline-block; font-size: 10.5px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+  .badge-cancel { background: #fbe9e9; color: #b40e0e; }
+  .table-wrap table.incident-table { min-width: 620px; }
+
+  @page { size: A4; margin: 12mm; }
+  @media print {
+    body { zoom: 0.75; }
+    .table-wrap table { min-width: 0 !important; }
+    .cols th, .cols td { padding: 6px 8px !important; font-size: 11px !important; }
+  }
+
+  @media (max-width: 720px) {
+    body { padding: 24px 16px; }
+    h1 { font-size: 21px; }
+    h2 { font-size: 16px; margin-top: 34px; margin-bottom: 10px; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .kpi-card { padding: 14px 14px; }
+    .kpi-value { font-size: 20px; }
+    .cols { gap: 14px; overflow-x: hidden; }
+    .cols > div { min-width: 0 !important; }
+    .chart-card { padding: 16px 14px 10px; max-width: 100%; overflow-x: hidden; }
+    .chart-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; max-width: 100%; }
+    .chart-bars, .chart-labels { min-width: 620px; height: 110px; }
+    .chart-labels { height: auto; }
+    .chart-bar-count { font-size: 8px; }
+    .chart-label { font-size: 8px; }
+  }
+</style>
+</head>
+<body>
+<h1>Syed Ahmed — Night Shift Report</h1><p class="subtitle">Nissan Patrol (2025) · car 301444 · Enterprises Rent-a-Car, Bahrain &nbsp;•&nbsp; Duty 7:30 PM – 7:30 AM · 21–23 October 2026 · BHD</p><h2>Time (Uber time file, 21–23 Oct)</h2><p class="note">Uber gives one total for all days. Shift 1 (Wed night) had no trips, so these totals belong to Shift 2 (Thu night to Fri morning).</p><div class="kpi-grid"><div class="kpi-card"><div class="kpi-label">Online (total)</div><div class="kpi-value ">10h 52m</div></div><div class="kpi-card"><div class="kpi-label">Idle — waiting for trip</div><div class="kpi-value red">6h 39m (61%)</div></div><div class="kpi-card"><div class="kpi-label">Going to pickup</div><div class="kpi-value ">1h 47m</div></div><div class="kpi-card"><div class="kpi-label">On trip with rider</div><div class="kpi-value green">2h 26m</div></div></div><h2>Money</h2><div class="kpi-grid"><div class="kpi-card"><div class="kpi-label">Net earning</div><div class="kpi-value green">48.51</div></div><div class="kpi-card"><div class="kpi-label">Per completed trip</div><div class="kpi-value ">4.85</div></div><div class="kpi-card"><div class="kpi-label">Per online hour</div><div class="kpi-value ">4.46</div></div><div class="kpi-card"><div class="kpi-label">Per km on trip</div><div class="kpi-value ">0.53</div></div><div class="kpi-card"><div class="kpi-label">Cash collected</div><div class="kpi-value ">9.63</div></div></div><h2>Distance</h2><div class="kpi-grid"><div class="kpi-card"><div class="kpi-label">Idle (open)</div><div class="kpi-value ">79.9 km</div></div><div class="kpi-card"><div class="kpi-label">Going to pickup</div><div class="kpi-value ">49.5 km</div></div><div class="kpi-card"><div class="kpi-label">On trip</div><div class="kpi-value ">91.5 km</div></div><div class="kpi-card"><div class="kpi-label">Total</div><div class="kpi-value ">220.9 km</div></div></div><h2>Shift 1 — Wed 21 Oct 7:30 PM → Thu 22 Oct morning</h2><p class="note">No trips or requests in this shift.</p><h2>Shift 2 — Thu 22 Oct 7:30 PM → Fri 23 Oct morning</h2><div class="kpi-grid"><div class="kpi-card"><div class="kpi-label">Shift length</div><div class="kpi-value ">12h 20m (to 07:50)</div></div><div class="kpi-card"><div class="kpi-label">Requests</div><div class="kpi-value ">14</div></div><div class="kpi-card"><div class="kpi-label">Completed</div><div class="kpi-value green">10 (71%)</div></div><div class="kpi-card"><div class="kpi-label">Cancelled</div><div class="kpi-value red">4 (29%)</div></div><div class="kpi-card"><div class="kpi-label">Time on trips</div><div class="kpi-value ">4h 06m (33%)</div></div><div class="kpi-card"><div class="kpi-label">Not on a trip (est.)</div><div class="kpi-value ">8h 14m</div></div><div class="kpi-card"><div class="kpi-label">Km on trips</div><div class="kpi-value ">90.3</div></div><div class="kpi-card"><div class="kpi-label">First request</div><div class="kpi-value ">20:40</div></div></div><h2>Trips by Hour</h2><div class="cols"><div class="chart-card"><div class="chart-title">Completed — by hour</div><div class="chart-scroll"><div class="chart-bars"><div class="chart-bar-wrap"><div class="chart-bar completed-bar" style="height:0%"></div></div><div class="chart-bar-wrap"><div class="chart-bar-count">1</div><div class="chart-bar completed-bar" style="height:33%"></div></div><div class="chart-bar-wrap"><div class="chart-bar-count peak-count-completed">3</div><div class="chart-bar completed-bar peak" style="height:100%"></div></div><div class="chart-bar-wrap"><div class="chart-bar-count">1</div><div class="chart-bar completed-bar" style="height:33%"></div></div><div class="chart-bar-wrap"><div class="chart-bar-count">1</div><div class="chart-bar completed-bar" style="height:33%"></div></div><div class="chart-bar-wrap"><div class="chart-bar completed-bar" style="height:0%"></div></div><div class="chart-bar-wrap"><div class="chart-bar completed-bar" style="height:0%"></div></div><div class="chart-bar-wrap"><div class="chart-bar-count">2</div><div class="chart-bar completed-bar" style="height:67%"></div></div><div class="chart-bar-wrap"><div class="chart-bar-count">1</div><div class="chart-bar completed-bar" style="height:33%"></div></div><div class="chart-bar-wrap"><div class="chart-bar completed-bar" style="height:0%"></div></div><div class="chart-bar-wrap"><div class="chart-bar completed-bar" style="height:0%"></div></div><div class="chart-bar-wrap"><div class="chart-bar completed-bar" style="height:0%"></div></div><div class="chart-bar-wrap"><div class="chart-bar-count">1</div><div class="chart-bar completed-bar" style="height:33%"></div></div><div class="chart-bar-wrap"><div class="chart-bar completed-bar" style="height:0%"></div></div></div><div class="chart-labels"><div class="chart-label">7PM</div><div class="chart-label">8PM</div><div class="chart-label">9PM</div><div class="chart-label">10PM</div><div class="chart-label">11PM</div><div class="chart-label">12AM</div><div class="chart-label">1AM</div><div class="chart-label">2AM</div><div class="chart-label">3AM</div><div class="chart-label">4AM</div><div class="chart-label">5AM</div><div class="chart-label">6AM</div><div class="chart-label">7AM</div><div class="chart-label">8AM</div></div></div></div><div class="chart-card"><div class="chart-title">Cancelled — by hour</div><div class="chart-scroll"><div class="chart-bars"><div class="chart-bar-wrap"><div class="chart-bar cancelled-bar" style="height:0%"></div></div><div class="chart-bar-wrap"><div class="chart-bar cancelled-bar" style="height:0%"></div></div><div class="chart-bar-wrap"><div class="chart-bar-count">1</div><div class="chart-bar cancelled-bar" style="height:50%"></div></div><div class="chart-bar-wrap"><div class="chart-bar cancelled-bar" style="height:0%"></div></div><div class="chart-bar-wrap"><div class="chart-bar cancelled-bar" style="height:0%"></div></div><div class="chart-bar-wrap"><div class="chart-bar-count peak-count-cancelled">2</div><div class="chart-bar cancelled-bar peak" style="height:100%"></div></div><div class="chart-bar-wrap"><div class="chart-bar cancelled-bar" style="height:0%"></div></div><div class="chart-bar-wrap"><div class="chart-bar cancelled-bar" style="height:0%"></div></div><div class="chart-bar-wrap"><div class="chart-bar cancelled-bar" style="height:0%"></div></div><div class="chart-bar-wrap"><div class="chart-bar cancelled-bar" style="height:0%"></div></div><div class="chart-bar-wrap"><div class="chart-bar cancelled-bar" style="height:0%"></div></div><div class="chart-bar-wrap"><div class="chart-bar-count">1</div><div class="chart-bar cancelled-bar" style="height:50%"></div></div><div class="chart-bar-wrap"><div class="chart-bar cancelled-bar" style="height:0%"></div></div><div class="chart-bar-wrap"><div class="chart-bar cancelled-bar" style="height:0%"></div></div></div><div class="chart-labels"><div class="chart-label">7PM</div><div class="chart-label">8PM</div><div class="chart-label">9PM</div><div class="chart-label">10PM</div><div class="chart-label">11PM</div><div class="chart-label">12AM</div><div class="chart-label">1AM</div><div class="chart-label">2AM</div><div class="chart-label">3AM</div><div class="chart-label">4AM</div><div class="chart-label">5AM</div><div class="chart-label">6AM</div><div class="chart-label">7AM</div><div class="chart-label">8AM</div></div></div></div></div><h2>Trip List</h2><p class="note">"Wait before" = minutes since his previous drop-off (or since 7:30 PM for the first trip).</p><div class="table-wrap"><table><thead><tr><th>Request</th><th>Drop-off</th><th>Status</th><th class="num">Km</th><th class="num">Trip min</th><th class="num">Wait before (min)</th><th>Pay</th></tr></thead><tbody><tr><td>Thu 20:40</td><td>21:06</td><td>Completed</td><td class="num">6.0</td><td class="num">26</td><td class="num">71</td><td>card</td></tr><tr><td>Thu 21:12</td><td>–</td><td><span class="badge badge-cancel">Cancelled</span></td><td class="num">0.0</td><td class="num">–</td><td class="num">6</td><td>–</td></tr><tr><td>Thu 21:15</td><td>21:38</td><td>Completed</td><td class="num">5.9</td><td class="num">23</td><td class="num">3</td><td>card</td></tr><tr><td>Thu 21:44</td><td>22:01</td><td>Completed</td><td class="num">4.5</td><td class="num">17</td><td class="num">6</td><td>card</td></tr><tr><td>Thu 21:58</td><td>22:29</td><td>Completed</td><td class="num">8.9</td><td class="num">31</td><td class="num">0</td><td>card</td></tr><tr><td>Thu 22:40</td><td>23:14</td><td>Completed</td><td class="num">3.4</td><td class="num">34</td><td class="num">11</td><td>card</td></tr><tr><td>Thu 23:15</td><td>23:40</td><td>Completed</td><td class="num">12.4</td><td class="num">26</td><td class="num">0</td><td>card</td></tr><tr><td>Fri 00:29</td><td>–</td><td><span class="badge badge-cancel">Cancelled</span></td><td class="num">0.0</td><td class="num">–</td><td class="num">49</td><td>–</td></tr><tr><td>Fri 00:30</td><td>–</td><td><span class="badge badge-cancel">Cancelled</span></td><td class="num">0.0</td><td class="num">–</td><td class="num">1</td><td>–</td></tr><tr><td>Fri 02:19</td><td>02:41</td><td>Completed</td><td class="num">14.5</td><td class="num">22</td><td class="num">109</td><td>card</td></tr><tr><td>Fri 02:58</td><td>03:17</td><td>Completed</td><td class="num">12.3</td><td class="num">19</td><td class="num">16</td><td>card</td></tr><tr><td>Fri 03:25</td><td>03:39</td><td>Completed</td><td class="num">3.3</td><td class="num">14</td><td class="num">8</td><td>card</td></tr><tr><td>Fri 06:19</td><td>–</td><td><span class="badge badge-cancel">Cancelled</span></td><td class="num">0.0</td><td class="num">–</td><td class="num">160</td><td>–</td></tr><tr><td>Fri 07:16</td><td>07:50</td><td>Completed</td><td class="num">19.0</td><td class="num">34</td><td class="num">57</td><td>cash</td></tr></tbody></table></div></body></html>
